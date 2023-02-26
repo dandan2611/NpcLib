@@ -1,0 +1,8 @@
+name: Minecaft-Plugin-Base
+version: '${version}'
+main: fr.codinbox.base.BaseMain
+api-version: 1.19
+authors: [ dandan2611 ]
+load: POSTWORLD
+depend: []
+commands: []
