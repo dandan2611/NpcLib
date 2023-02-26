@@ -83,7 +83,7 @@ public class NpcHolderImpl implements NpcHolder {
     }
 
     @Override
-    public void showNpc(@NotNull Npc npc, @NotNull Player player) {
+    public void tickNpc(@NotNull Npc npc, @NotNull Player player) {
         if (!npc.isGlobal() && npc.getViewers().contains(player.getUniqueId()))
             return;
 

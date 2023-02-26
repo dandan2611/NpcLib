@@ -18,7 +18,7 @@ public class PlayerJoinListener implements Listener {
         var player = event.getPlayer();
         var location = player.getLocation();
 
-        holder.getNpcsInWorld(location.getWorld()).forEach(npc -> holder.showNpc(npc, player));
+        holder.getNpcsInWorld(location.getWorld()).forEach(npc -> holder.tickNpc(npc, player));
     }
 
 }

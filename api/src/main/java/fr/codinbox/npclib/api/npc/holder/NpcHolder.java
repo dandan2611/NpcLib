@@ -25,7 +25,7 @@ public interface NpcHolder {
 
     void setRendered(@NotNull Npc npc, @NotNull Player player, boolean rendered);
 
-    void showNpc(@NotNull Npc npc, @NotNull Player player);
+    void tickNpc(@NotNull Npc npc, @NotNull Player player);
 
     //void hideNpc(@NotNull Npc npc, @NotNull Player player);
 

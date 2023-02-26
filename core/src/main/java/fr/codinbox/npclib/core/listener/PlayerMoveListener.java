@@ -4,7 +4,6 @@ import fr.codinbox.npclib.api.npc.holder.NpcHolder;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerTeleportEvent;
 
 public class PlayerMoveListener implements Listener {
 
@@ -19,7 +18,7 @@ public class PlayerMoveListener implements Listener {
         var player = event.getPlayer();
         var location = player.getLocation();
 
-        holder.getNpcsInWorld(location.getWorld()).forEach(npc -> holder.showNpc(npc, player));
+        holder.getNpcsInWorld(location.getWorld()).forEach(npc -> holder.tickNpc(npc, player));
     }
 
 }
