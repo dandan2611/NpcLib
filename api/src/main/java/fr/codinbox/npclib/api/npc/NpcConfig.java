@@ -1,5 +1,6 @@
 package fr.codinbox.npclib.api.npc;
 
+import fr.codinbox.npclib.api.npc.skin.Skin;
 import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
 

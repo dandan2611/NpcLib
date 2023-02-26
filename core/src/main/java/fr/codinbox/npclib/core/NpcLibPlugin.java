@@ -4,19 +4,15 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
-import com.comphenix.protocol.wrappers.EnumWrappers;
 import fr.codinbox.npclib.api.NpcLib;
-import fr.codinbox.npclib.api.npc.Npc;
 import fr.codinbox.npclib.api.npc.NpcConfig;
-import fr.codinbox.npclib.api.npc.Skin;
+import fr.codinbox.npclib.api.npc.skin.Skin;
 import fr.codinbox.npclib.core.impl.NpcLibImpl;
 import fr.codinbox.npclib.core.impl.packet.PacketStationImpl;
-import fr.codinbox.npclib.core.listener.PlayerJoinListener;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.HashMap;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
