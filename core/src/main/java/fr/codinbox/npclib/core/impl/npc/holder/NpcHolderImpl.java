@@ -1,5 +1,6 @@
 package fr.codinbox.npclib.core.impl.npc.holder;
 
+import fr.codinbox.npclib.api.NpcLib;
 import fr.codinbox.npclib.api.npc.Npc;
 import fr.codinbox.npclib.api.npc.NpcConfig;
 import fr.codinbox.npclib.api.npc.holder.NpcHolder;
@@ -73,13 +74,21 @@ public class NpcHolderImpl implements NpcHolder {
 
     @Override
     public boolean isRendered(@NotNull Npc npc, @NotNull Player player) {
-        return this.playerRenderedNpcs.getOrDefault(player.getUniqueId(), Set.of()).contains(npc);
+        return this.playerRenderedNpcs.getOrDefault(player.getUniqueId(), new HashSet<>()).contains(npc);
     }
 
     @Override
     public void setRendered(@NotNull Npc npc, @NotNull Player player, boolean rendered) {
-        if (rendered) this.playerRenderedNpcs.computeIfAbsent(player.getUniqueId(), k -> Set.of()).add(npc);
-        else this.playerRenderedNpcs.computeIfAbsent(player.getUniqueId(), k -> Set.of()).remove(npc);
+        if (rendered && !this.isRendered(npc, player)) {
+            this.playerRenderedNpcs.computeIfAbsent(player.getUniqueId(), k -> new HashSet<>()).add(npc);
+            NpcLibPlugin.station().createPlayerInfoPacket(npc, null, player);
+            NpcLibPlugin.station().createPlayerSpawnPacket(npc, null, player);
+        }
+        else {
+            this.playerRenderedNpcs.computeIfAbsent(player.getUniqueId(), k -> new HashSet<>()).remove(npc);
+            NpcLibPlugin.station().createPlayerDespawnPacket(npc, null, player);
+            NpcLibPlugin.station().createPlayerInfoRemovePacket(npc, null, player);
+        }
     }
 
     @Override
@@ -93,12 +102,17 @@ public class NpcHolderImpl implements NpcHolder {
                 ? playerLocation.distance(npcLocation)
                 : Double.MAX_VALUE;
 
-        if (distance <= NpcLibPlugin.RENDER_DISTANCE && !this.isRendered(npc, player)) {
-            NpcLibPlugin.station().createPlayerInfoPacket(npc, null, player);
-            NpcLibPlugin.station().createPlayerSpawnPacket(npc, null, player);
-        } else {
-            // TODO: If npc is shown, remove it
-        }
+        var rendered = this.isRendered(npc, player);
+        if (distance <= NpcLibPlugin.RENDER_DISTANCE && !rendered)
+            this.setRendered(npc, player, true);
+        else if (distance > NpcLibPlugin.RENDER_DISTANCE && rendered)
+            this.setRendered(npc, player, false);
+    }
+
+    @Override
+    public @NotNull Set<@NotNull Npc> getShownNpcs(@NotNull Player player) {
+        return this.playerRenderedNpcs.getOrDefault(player.getUniqueId(), new HashSet<>()).stream()
+                .collect(Collectors.toUnmodifiableSet());
     }
 
 }

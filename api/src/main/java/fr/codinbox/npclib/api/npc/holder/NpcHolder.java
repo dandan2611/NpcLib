@@ -29,4 +29,6 @@ public interface NpcHolder {
 
     //void hideNpc(@NotNull Npc npc, @NotNull Player player);
 
+    @NotNull Set<@NotNull Npc> getShownNpcs(@NotNull Player player);
+
 }
