@@ -13,3 +13,4 @@ build-deploy:
     paths:
       - ./api/build/libs/*.jar
       - ./core/build/libs/*.jar
+    expire_in: 7 days
