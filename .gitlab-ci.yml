@@ -8,15 +8,6 @@ build-deploy:
   stage: build
   script:
     - gradle publish -PnpclibAuthHeaderName=Job-Token -PnpclibAuthHeaderValue=${CI_JOB_TOKEN}
-  only:
-    changes:
-      - build.gradle
-      - src/**
-      - gradle/**
-      - gradlew
-      - gradlew.bat
-      - settings.gradle
-      - .gitlab-ci.yml
   artifacts:
     name: plugins-jar
     paths:
