@@ -11,4 +11,5 @@ build-deploy:
   artifacts:
     name: plugins-jar
     paths:
-      - ./build/libs/*.jar
+      - ./api/build/libs/*.jar
+      - ./core/build/libs/*.jar
