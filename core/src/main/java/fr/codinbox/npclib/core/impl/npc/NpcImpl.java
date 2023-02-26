@@ -1,6 +1,8 @@
 package fr.codinbox.npclib.core.impl.npc;
 
 import fr.codinbox.npclib.api.npc.Npc;
+import fr.codinbox.npclib.api.npc.event.NpcClickedEvent;
+import fr.codinbox.npclib.api.npc.event.NpcClickedListener;
 import fr.codinbox.npclib.api.npc.skin.Skin;
 import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
@@ -22,6 +24,8 @@ public class NpcImpl implements Npc {
     private final Set<UUID> viewers;
 
     private boolean global;
+
+    private final Set<NpcClickedListener> listeners = new HashSet<>();
 
     public NpcImpl(Location location, Skin skin, int entityId, UUID uuid, boolean global) {
         this.location = location;
@@ -60,6 +64,16 @@ public class NpcImpl implements Npc {
     @Override
     public boolean isGlobal() {
         return this.global;
+    }
+
+    @Override
+    public void addClickedListener(@NotNull NpcClickedListener listener) {
+        this.listeners.add(listener);
+    }
+
+    @Override
+    public void callClickedListeners(@NotNull NpcClickedEvent event) {
+        this.listeners.forEach(listener -> listener.onNpcClicked(event));
     }
 
     @Override
