@@ -1,0 +1,23 @@
+image: gradle:7.4-jdk17-alpine
+
+before_script:
+  - GRADLE_USER_HOME="$(pwd)/.gradle"
+  - export GRADLE_USER_HOME
+
+build-deploy:
+  stage: build
+  script:
+    - gradle publish -PnpclibAuthHeaderName=Job-Token -PnpclibAuthHeaderValue=${CI_JOB_TOKEN}
+  only:
+    changes:
+      - build.gradle
+      - src/**
+      - gradle/**
+      - gradlew
+      - gradlew.bat
+      - settings.gradle
+      - .gitlab-ci.yml
+  artifacts:
+    name: plugins-jar
+    paths:
+      - ./build/libs/*.jar
