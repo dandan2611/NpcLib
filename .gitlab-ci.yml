@@ -7,7 +7,7 @@ before_script:
 build-deploy:
   stage: build
   script:
-    - gradle publish -PnpclibAuthHeaderName=Job-Token -PnpclibAuthHeaderValue=${CI_JOB_TOKEN}
+    - gradle build publish -PnpclibAuthHeaderName=Job-Token -PnpclibAuthHeaderValue=${CI_JOB_TOKEN}
   artifacts:
     name: plugins-jar
     paths:
