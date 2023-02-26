@@ -2,6 +2,7 @@ package fr.codinbox.npclib.api.event;
 
 import fr.codinbox.npclib.api.npc.Npc;
 import fr.codinbox.npclib.api.npc.holder.NpcHolder;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -13,12 +14,26 @@ public class NpcInteractEvent extends Event implements Cancellable {
 
     private boolean cancelled = false;
 
+    @NotNull
     private final Npc npc;
+
+    @NotNull
     private final NpcHolder holder;
 
-    public NpcInteractEvent(Npc npc, NpcHolder holder) {
+    @NotNull
+    private final Player player;
+
+    @NotNull
+    private final InteractionType interactionType;
+
+    public NpcInteractEvent(@NotNull Npc npc,
+                            @NotNull NpcHolder holder,
+                            @NotNull Player player,
+                            @NotNull InteractionType interactionType) {
         this.npc = npc;
         this.holder = holder;
+        this.player = player;
+        this.interactionType = interactionType;
     }
 
     @Override
@@ -36,16 +51,24 @@ public class NpcInteractEvent extends Event implements Cancellable {
         return HANDLERS;
     }
 
+    @NotNull
     public Npc getNpc() {
         return npc;
     }
 
+    @NotNull
     public NpcHolder getHolder() {
         return holder;
     }
 
     public static HandlerList getHandlerList() {
         return HANDLERS;
+    }
+
+    public enum InteractionType {
+        PUNCH,
+        INTERACT,
+        INTERACT_AT
     }
 
 }
