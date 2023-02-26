@@ -1,6 +1,5 @@
 plugins {
-    java
-    `maven-publish`
+    id("java")
 }
 
 group = "fr.codinbox.npclib"

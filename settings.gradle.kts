@@ -1,1 +1,3 @@
-rootProject.name = "minecraft-base"
+rootProject.name = "npclib"
+include("api")
+include("core")
