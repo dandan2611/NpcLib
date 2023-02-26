@@ -1,5 +1,7 @@
 package fr.codinbox.npclib.api.npc;
 
+import fr.codinbox.npclib.api.npc.event.NpcClickedEvent;
+import fr.codinbox.npclib.api.npc.event.NpcClickedListener;
 import fr.codinbox.npclib.api.npc.skin.Skin;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -45,5 +47,9 @@ public interface Npc {
     @NotNull Set<UUID> getViewers();
 
     boolean isGlobal();
+
+    void addClickedListener(@NotNull NpcClickedListener listener);
+
+    void callClickedListeners(@NotNull NpcClickedEvent event);
 
 }
