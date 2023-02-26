@@ -1,5 +1,6 @@
 plugins {
     id("java")
+    id("maven-publish")
 }
 
 group = "fr.codinbox.npclib"
@@ -19,3 +20,21 @@ repositories {
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.19.3-R0.1-SNAPSHOT")
 }
+
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            from(components["java"])
+        }
+    }
+    repositories {
+        maven(url = "https://git.codinbox.fr/api/v4/projects/29/packages/maven") {
+            name = "npclib"
+            credentials(HttpHeaderCredentials::class)
+            authentication {
+                create<HttpHeaderAuthentication>("header")
+            }
+        }
+    }
+}
+
