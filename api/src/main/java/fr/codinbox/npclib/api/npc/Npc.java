@@ -8,6 +8,7 @@ import fr.codinbox.npclib.api.reactive.Reactive;
 import fr.codinbox.npclib.api.reactive.ReactiveList;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -108,6 +109,14 @@ public interface Npc {
      * @return the NPC name reactive
      */
     @NotNull Reactive<String> getNameReactive();
+
+    default boolean isRenderedFor(@NotNull Player player) {
+        return this.getHolder().getShownNpcs(player).contains(this);
+    }
+
+    default boolean hasViewer(@NotNull UUID uuid) {
+        return this.getViewersReactive().contains(uuid);
+    }
 
     @NotNull
     default Set<UUID> getRenderedFor() {

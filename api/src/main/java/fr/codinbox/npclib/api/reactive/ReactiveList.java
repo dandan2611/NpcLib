@@ -1,6 +1,7 @@
 package fr.codinbox.npclib.api.reactive;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Comparator;
@@ -103,6 +104,16 @@ public interface ReactiveList<T> extends Reactive<List<T>>, Cloneable, Listenabl
     @NotNull
     default Stream<T> stream() {
         return get().stream();
+    }
+
+    /**
+     * Check if the list contains an element.
+     *
+     * @param elem the element to check
+     * @return true if the list contains the element
+     */
+    default boolean contains(@Nullable T elem) {
+        return get().contains(elem);
     }
 
 }
