@@ -32,16 +32,16 @@ public class NpcImpl implements Npc {
                    UUID uuid,
                    NpcConfig config) {
         this.holder = holder;
-        this.location = new ReactiveImpl<>(config.getLocation());
-        this.skin = new ReactiveImpl<>(config.getSkin());
+        this.location = new ReactiveImpl<>(config.getLocation()); // TODO: Location change listener
+        this.skin = new ReactiveImpl<>(config.getSkin()); // TODO: Skin change listener
         this.entityId = entityId;
         this.uuid = uuid;
-        this.global = new ReactiveImpl<>(config.isGlobal());
+        this.global = new ReactiveImpl<>(config.isGlobal()); // TODO: Global change listener
 
-        this.viewers = new ReactiveListImpl<>();
+        this.viewers = new ReactiveListImpl<>(); // TODO: Viewers change listener
         this.clickedListeners = new ReactiveListImpl<>();
         this.renderDistance = config.getRenderDistance() != null ? new ReactiveImpl<>(config.getRenderDistance())
-                : new ReactiveImpl<>(this.holder.getConfiguration().getNpcViewDistance());
+                : new ReactiveImpl<>(this.holder.getConfiguration().getNpcViewDistance()); // TODO: Render distance change listener
     }
 
     @Override
