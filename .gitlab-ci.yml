@@ -1,13 +1,43 @@
 image: gradle:7.4-jdk17-alpine
 
+stages:
+  - build
+  - test
+  - deploy
+
 before_script:
   - GRADLE_USER_HOME="$(pwd)/.gradle"
   - export GRADLE_USER_HOME
 
-build-deploy:
+build:
   stage: build
   script:
-    - gradle build publish -PnpclibAuthHeaderName=Job-Token -PnpclibAuthHeaderValue=${CI_JOB_TOKEN}
+    - gradle build -x test
+  cache:
+    key: $CI_COMMIT_REF_SLUG
+    policy: pull
+    paths:
+      - .gradle
+
+run-tests:
+  stage: test
+  script:
+    - gradle test
+  cache:
+    key: $CI_COMMIT_REF_SLUG
+    policy: pull
+    paths:
+      - .gradle
+
+deploy:
+  stage: build
+  script:
+    - gradle build publish -x test -PnpclibAuthHeaderName=Job-Token -PnpclibAuthHeaderValue=${CI_JOB_TOKEN}
+  cache:
+    key: $CI_COMMIT_REF_SLUG
+    policy: pull
+    paths:
+      - .gradle
   artifacts:
     name: plugins-jar
     paths:
