@@ -28,6 +28,16 @@ run-tests:
     policy: pull
     paths:
       - .gradle
+  artifacts:
+    name: test-results
+    paths:
+      - ./api/build/test-results/test
+      - ./core/build/test-results/test
+    expire_in: 7 days
+    reports:
+        junit:
+            - ./api/build/test-results/test/*.xml
+            - ./core/build/test-results/test/*.xml
 
 deploy:
   stage: deploy
