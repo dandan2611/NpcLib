@@ -9,10 +9,10 @@ It is designed to be easy to use and to be able to be used in any Bukkit plugin.
 | --- |-----------------------------------------------------| --- |
 | Creation | Create NPCs with a name, skin, and location         | ✅ |
 | Interaction | Interact with NPCs by clicking on them              | ✅ |
-| Removal | Remove NPCs from the world                          | ❌ |
-| Movement | Move NPCs around the world                          | ❌ |
+| Removal | Remove NPCs from the world                          | ✅ |
+| Movement | Move NPCs around the world                          | ✅ |
 | Animation | Play animations on NPCs                             | ❌ |
-| Configuration | Configure NPCs with a complete configuration object | ❌ |
+| Configuration | Configure NPCs with a complete configuration object | ✅ |
 
 ## Installation
 
