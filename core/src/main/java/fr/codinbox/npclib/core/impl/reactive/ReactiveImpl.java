@@ -55,6 +55,7 @@ public class ReactiveImpl<T> implements Reactive<T> {
         ReactiveListener<T> listener = bindListenerMap.computeIfAbsent(other, k ->
                 (reactive, previousValue, newValue) -> set(newValue));
         other.addListener(listener);
+        set(other.get());
     }
 
     @Override
