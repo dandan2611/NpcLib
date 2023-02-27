@@ -32,6 +32,8 @@ public interface NpcHolder {
 
     @NotNull Set<@NotNull Npc> getShownNpcs(@NotNull Player player);
 
+    @NotNull Set<@NotNull Npc> getShownNpcs(@NotNull UUID player);
+
     @NotNull NpcHolderConfiguration getConfiguration();
 
     @NotNull Set<@NotNull UUID> getRenderedPlayers(@NotNull Npc npc);

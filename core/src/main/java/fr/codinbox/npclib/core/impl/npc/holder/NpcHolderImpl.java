@@ -160,6 +160,12 @@ public class NpcHolderImpl implements NpcHolder {
     }
 
     @Override
+    public @NotNull Set<@NotNull Npc> getShownNpcs(@NotNull UUID player) {
+        return this.playerRenderedNpcs.getOrDefault(player, new HashSet<>()).stream()
+                .collect(Collectors.toUnmodifiableSet());
+    }
+
+    @Override
     public @NotNull NpcHolderConfiguration getConfiguration() {
         return this.configuration;
     }

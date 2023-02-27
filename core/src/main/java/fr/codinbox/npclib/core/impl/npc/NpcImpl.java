@@ -8,12 +8,14 @@ import fr.codinbox.npclib.api.npc.holder.NpcHolder;
 import fr.codinbox.npclib.api.npc.skin.Skin;
 import fr.codinbox.npclib.api.reactive.Reactive;
 import fr.codinbox.npclib.api.reactive.ReactiveList;
+import fr.codinbox.npclib.api.reactive.ReactiveListener;
 import fr.codinbox.npclib.core.impl.reactive.ReactiveImpl;
 import fr.codinbox.npclib.core.impl.reactive.ReactiveListImpl;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
 import java.util.UUID;
 
 public class NpcImpl implements Npc {
@@ -43,13 +45,26 @@ public class NpcImpl implements Npc {
 
         this.entityId = entityId;
         this.uuid = uuid;
-        this.global = new ReactiveImpl<>(config.isGlobal()); // TODO: Global change listener
+        this.global = new ReactiveImpl<>(config.isGlobal());
+        this.global.addListener((r, p, n) -> this.update());
 
-        this.viewers = new ReactiveListImpl<>(); // TODO: Viewers change listener
+        this.viewers = new ReactiveListImpl<>();
+        this.viewers.addListener((r, p, n) -> n.forEach(i -> {
+            var pl = Bukkit.getPlayer(i);
+            if (pl == null)
+                return;
+            if (!this.holder.getShownNpcs(i).contains(this))
+                this.holder.performChecks(this, pl);
+        }));
+
         this.clickedListeners = new ReactiveListImpl<>();
+
         this.renderDistance = config.getRenderDistance() != null ? new ReactiveImpl<>(config.getRenderDistance())
-                : new ReactiveImpl<>(this.holder.getConfiguration().getNpcViewDistance()); // TODO: Render distance change listener
-        this.name = new ReactiveImpl<>(config.getName()); // TODO: Name change listener
+                : new ReactiveImpl<>(this.holder.getConfiguration().getNpcViewDistance());
+        this.renderDistance.addListener((r, p, n) -> this.update());
+
+        this.name = new ReactiveImpl<>(config.getName());
+        this.name.addListener((r, p, n) -> this.update());
     }
 
     @Override
