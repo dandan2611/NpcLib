@@ -72,9 +72,10 @@ class MyNpcSpawner {
         Npc npc = this.npcHolder.createNpc(
                 NpcConfig.create(location, skin)
                         .setGlobal(true) // Display the NPC to all players
+                        .setRenderDistance(64) // Override the holder's configuration render distance
         );
         // From now, every player will see the NPC
-        npc.addClickedListener(event -> {
+        npc.getClickedListeners().add(event -> {
            var player = event.getPlayer();
            player.sendMessage("You clicked on the NPC!");
         });
