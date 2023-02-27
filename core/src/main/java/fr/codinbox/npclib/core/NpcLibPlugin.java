@@ -49,7 +49,7 @@ public class NpcLibPlugin extends JavaPlugin {
         npc.addClickedListener(new NpcClickedListener() {
             @Override
             public void onNpcClicked(@NotNull NpcClickedEvent event) {
-                // Clicked!
+                event.getPlayer().sendMessage("Hello World!");
             }
         });
     }
