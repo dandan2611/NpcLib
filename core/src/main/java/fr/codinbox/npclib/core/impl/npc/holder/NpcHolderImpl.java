@@ -100,7 +100,16 @@ public class NpcHolderImpl implements NpcHolder {
 
     @Override
     public void destroyNpc(@NotNull Npc npc) {
-
+        this.npcs.remove(npc.getEntityId());
+        this.worldNpcs.computeIfAbsent(npc.getLocationReactive().get().getWorld(), k -> new HashSet<>()).remove(npc);
+        this.playerRenderedNpcs.values().forEach(set -> set.remove(npc));
+        npc.getViewersReactive().get().forEach(uuid -> {
+            var player = this.plugin.getServer().getPlayer(uuid);
+            if (player != null) {
+                NpcLibPlugin.station().createPlayerDespawnPacket(npc, null, player);
+                NpcLibPlugin.station().createPlayerInfoRemovePacket(npc, null, player);
+            }
+        });
     }
 
     @Override
