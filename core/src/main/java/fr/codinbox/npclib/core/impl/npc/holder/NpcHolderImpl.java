@@ -133,9 +133,12 @@ public class NpcHolderImpl implements NpcHolder {
     }
 
     @Override
-    public void checkVisibility(@NotNull Npc npc, @NotNull Player player) {
-        if (!npc.getGlobalReactive().get() && npc.getViewersReactive().get().contains(player.getUniqueId()))
-            return;
+    public void performChecks(@NotNull Npc npc, @NotNull Player player) {
+        if (!npc.getGlobalReactive().get()) {
+            var viewers = npc.getViewersReactive().get();
+            if (this.isRendered(npc, player) && !viewers.contains(player.getUniqueId()))
+                this.setRendered(npc, player, false);
+        }
 
         var playerLocation = player.getLocation();
         var npcLocation = npc.getLocationReactive().get();
@@ -159,6 +162,14 @@ public class NpcHolderImpl implements NpcHolder {
     @Override
     public @NotNull NpcHolderConfiguration getConfiguration() {
         return this.configuration;
+    }
+
+    @Override
+    public @NotNull Set<@NotNull UUID> getRenderedPlayers(@NotNull Npc npc) {
+        return this.playerRenderedNpcs.entrySet().stream()
+                .filter(entry -> entry.getValue().contains(npc))
+                .map(HashMap.Entry::getKey)
+                .collect(Collectors.toUnmodifiableSet());
     }
 
 }

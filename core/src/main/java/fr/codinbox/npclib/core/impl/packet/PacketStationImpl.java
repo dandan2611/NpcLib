@@ -25,7 +25,7 @@ public class PacketStationImpl implements PacketStation<PacketContainer> {
     public boolean createPlayerInfoPacket(@NotNull Npc npc,
                                           @Nullable Consumer<PacketContainer> preprocessor,
                                           @NotNull Player player) {
-        var profile = new WrappedGameProfile(npc.getUUID(), "");
+        var profile = new WrappedGameProfile(npc.getUUID(), npc.getNameReactive().get());
         profile.getProperties().clear();
         profile.getProperties().put("textures",
                 new WrappedSignedProperty("textures",

@@ -2,6 +2,7 @@ package fr.codinbox.npclib.api.npc;
 
 import fr.codinbox.npclib.api.npc.event.NpcClickedEvent;
 import fr.codinbox.npclib.api.npc.event.NpcClickedListener;
+import fr.codinbox.npclib.api.npc.holder.NpcHolder;
 import fr.codinbox.npclib.api.npc.skin.Skin;
 import fr.codinbox.npclib.api.reactive.Reactive;
 import fr.codinbox.npclib.api.reactive.ReactiveList;
@@ -14,6 +15,15 @@ import java.util.Set;
 import java.util.UUID;
 
 public interface Npc {
+
+    /**
+     * Get the NPC holder.
+     * The holder is the object that created the NPC and is responsible for its management.
+     *
+     * @return the NPC holder
+     */
+    @NotNull
+    NpcHolder getHolder();
 
     /**
      * Get the NPC location reactive.
@@ -89,6 +99,19 @@ public interface Npc {
      *
      * @return the NPC render distance reactive
      */
-    Reactive<Integer> getRenderDistanceReactive();
+    @NotNull Reactive<Integer> getRenderDistanceReactive();
+
+    /**
+     * Get the NPC name reactive.
+     * The name is the name of the NPC. It is displayed above the NPC's head.
+     *
+     * @return the NPC name reactive
+     */
+    @NotNull Reactive<String> getNameReactive();
+
+    @NotNull
+    default Set<UUID> getRenderedFor() {
+        return this.getHolder().getRenderedPlayers(this);
+    }
 
 }

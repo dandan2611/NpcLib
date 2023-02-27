@@ -33,7 +33,7 @@ public class PlayerMoveListener implements Listener {
             return;
         this.lastLocations.put(player.getUniqueId(), location);
 
-        holder.getNpcsInWorld(location.getWorld()).forEach(npc -> holder.checkVisibility(npc, player));
+        holder.getNpcsInWorld(location.getWorld()).forEach(npc -> holder.performChecks(npc, player));
     }
 
     @EventHandler
@@ -42,7 +42,7 @@ public class PlayerMoveListener implements Listener {
         var location = player.getLocation();
         this.lastLocations.put(player.getUniqueId(), location);
         holder.getShownNpcs(player).forEach(npc -> holder.setRendered(npc, player, false));
-        holder.getNpcsInWorld(location.getWorld()).forEach(npc -> holder.checkVisibility(npc, player));
+        holder.getNpcsInWorld(location.getWorld()).forEach(npc -> holder.performChecks(npc, player));
     }
 
 }

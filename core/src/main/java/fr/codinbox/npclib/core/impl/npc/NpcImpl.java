@@ -10,6 +10,7 @@ import fr.codinbox.npclib.api.reactive.Reactive;
 import fr.codinbox.npclib.api.reactive.ReactiveList;
 import fr.codinbox.npclib.core.impl.reactive.ReactiveImpl;
 import fr.codinbox.npclib.core.impl.reactive.ReactiveListImpl;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
 
@@ -26,14 +27,20 @@ public class NpcImpl implements Npc {
     private final Reactive<Boolean> global;
     private final ReactiveList<NpcClickedListener> clickedListeners;
     private final Reactive<Integer> renderDistance;
+    private final Reactive<String> name;
 
     public NpcImpl(NpcHolder holder,
                    int entityId,
                    UUID uuid,
                    NpcConfig config) {
         this.holder = holder;
-        this.location = new ReactiveImpl<>(config.getLocation()); // TODO: Location change listener
-        this.skin = new ReactiveImpl<>(config.getSkin()); // TODO: Skin change listener
+
+        this.location = new ReactiveImpl<>(config.getLocation());
+        this.location.addListener((r, p, n) -> this.update());
+
+        this.skin = new ReactiveImpl<>(config.getSkin());
+        this.skin.addListener((r, p, n) -> this.update());
+
         this.entityId = entityId;
         this.uuid = uuid;
         this.global = new ReactiveImpl<>(config.isGlobal()); // TODO: Global change listener
@@ -42,6 +49,12 @@ public class NpcImpl implements Npc {
         this.clickedListeners = new ReactiveListImpl<>();
         this.renderDistance = config.getRenderDistance() != null ? new ReactiveImpl<>(config.getRenderDistance())
                 : new ReactiveImpl<>(this.holder.getConfiguration().getNpcViewDistance()); // TODO: Render distance change listener
+        this.name = new ReactiveImpl<>(config.getName()); // TODO: Name change listener
+    }
+
+    @Override
+    public @NotNull NpcHolder getHolder() {
+        return this.holder;
     }
 
     @Override
@@ -85,8 +98,23 @@ public class NpcImpl implements Npc {
     }
 
     @Override
-    public Reactive<Integer> getRenderDistanceReactive() {
+    public @NotNull Reactive<Integer> getRenderDistanceReactive() {
         return this.renderDistance;
+    }
+
+    @Override
+    public @NotNull Reactive<String> getNameReactive() {
+        return this.name;
+    }
+
+    private void update() {
+        var renderers = this.getRenderedFor();
+        for (UUID renderer : renderers) {
+            var pl = Bukkit.getPlayer(renderer);
+            if (pl == null) continue;
+            this.holder.setRendered(this, pl, false);
+            this.holder.setRendered(this, pl, true);
+        }
     }
 
     @Override

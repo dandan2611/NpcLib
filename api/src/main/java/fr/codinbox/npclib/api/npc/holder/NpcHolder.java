@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
+import java.util.UUID;
 
 /**
  * A NPC Holder is an entity able to create, manage and destroy NPCs.
@@ -25,12 +26,14 @@ public interface NpcHolder {
 
     void setRendered(@NotNull Npc npc, @NotNull Player player, boolean rendered);
 
-    void checkVisibility(@NotNull Npc npc, @NotNull Player player);
+    void performChecks(@NotNull Npc npc, @NotNull Player player);
 
     //void hideNpc(@NotNull Npc npc, @NotNull Player player);
 
     @NotNull Set<@NotNull Npc> getShownNpcs(@NotNull Player player);
 
     @NotNull NpcHolderConfiguration getConfiguration();
+
+    @NotNull Set<@NotNull UUID> getRenderedPlayers(@NotNull Npc npc);
 
 }
