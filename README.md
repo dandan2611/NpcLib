@@ -11,11 +11,11 @@ It is designed to be easy to use and to be able to be used in any Bukkit plugin.
 
 ## Features
 
-| Feature | Description                                                                                                |
-| --- |------------------------------------------------------------------------------------------------------------|
-| Creation of NPCs | 🏗️ Create/Delete NPCs with a name, skin and position                                                      |
-| Interacting with NPCs | 🎧 Listen to click events on NPCs                                                                          |
-| Fully reactive | 🚀 Listen to every events related to NPCs and their properties (see [Reactive objects](#reactive-objects)) |
+| Feature      | Description                                                                                                |
+|--------------|------------------------------------------------------------------------------------------------------------|
+| NPCs         | 🏗️ Create/Delete NPCs with a name, skin and position                                                      |
+| Interactions | 🎧 Listen to click events on NPCs                                                                          |
+| Reactivity   | 🚀 Listen to every events related to NPCs and their properties (see [Reactive objects](#reactive-objects)) |
 
 ### What's coming next?
 
