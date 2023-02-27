@@ -1,48 +1,56 @@
 package fr.codinbox.npclib.core.impl.npc;
 
 import fr.codinbox.npclib.api.npc.Npc;
+import fr.codinbox.npclib.api.npc.NpcConfig;
 import fr.codinbox.npclib.api.npc.event.NpcClickedEvent;
 import fr.codinbox.npclib.api.npc.event.NpcClickedListener;
+import fr.codinbox.npclib.api.npc.holder.NpcHolder;
 import fr.codinbox.npclib.api.npc.skin.Skin;
+import fr.codinbox.npclib.api.reactive.Reactive;
+import fr.codinbox.npclib.api.reactive.ReactiveList;
+import fr.codinbox.npclib.core.impl.reactive.ReactiveImpl;
+import fr.codinbox.npclib.core.impl.reactive.ReactiveListImpl;
 import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashSet;
-import java.util.Set;
 import java.util.UUID;
 
 public class NpcImpl implements Npc {
 
-    private Location location;
-
-    private Skin skin;
-
+    private final NpcHolder holder;
+    private final Reactive<Location> location;
+    private final ReactiveImpl<Skin> skin;
     private int entityId;
-
     private UUID uuid;
+    private final ReactiveList<UUID> viewers;
+    private final Reactive<Boolean> global;
+    private final ReactiveList<NpcClickedListener> clickedListeners;
+    private final Reactive<Integer> renderDistance;
 
-    private final Set<UUID> viewers;
-
-    private boolean global;
-
-    private final Set<NpcClickedListener> listeners = new HashSet<>();
-
-    public NpcImpl(Location location, Skin skin, int entityId, UUID uuid, boolean global) {
-        this.location = location;
-        this.skin = skin;
+    public NpcImpl(NpcHolder holder,
+                   int entityId,
+                   UUID uuid,
+                   NpcConfig config) {
+        this.holder = holder;
+        this.location = new ReactiveImpl<>(config.getLocation());
+        this.skin = new ReactiveImpl<>(config.getSkin());
         this.entityId = entityId;
         this.uuid = uuid;
-        this.global = global;
-        this.viewers = new HashSet<>();
+        this.global = new ReactiveImpl<>(config.isGlobal());
+
+        this.viewers = new ReactiveListImpl<>();
+        this.clickedListeners = new ReactiveListImpl<>();
+        this.renderDistance = config.getRenderDistance() != null ? new ReactiveImpl<>(config.getRenderDistance())
+                : new ReactiveImpl<>(this.holder.getConfiguration().getNpcViewDistance());
     }
 
     @Override
-    public @NotNull Location getLocation() {
+    public @NotNull Reactive<Location> getLocationReactive() {
         return this.location;
     }
 
     @Override
-    public @NotNull Skin getSkin() {
+    public @NotNull Reactive<Skin> getSkinReactive() {
         return this.skin;
     }
 
@@ -57,28 +65,33 @@ public class NpcImpl implements Npc {
     }
 
     @Override
-    public @NotNull Set<UUID> getViewers() {
+    public @NotNull ReactiveList<UUID> getViewersReactive() {
         return this.viewers;
     }
 
     @Override
-    public boolean isGlobal() {
+    public @NotNull Reactive<Boolean> getGlobalReactive() {
         return this.global;
     }
 
     @Override
-    public void addClickedListener(@NotNull NpcClickedListener listener) {
-        this.listeners.add(listener);
+    public @NotNull ReactiveList<NpcClickedListener> getClickedListeners() {
+        return this.clickedListeners;
     }
 
     @Override
     public void callClickedListeners(@NotNull NpcClickedEvent event) {
-        this.listeners.forEach(listener -> listener.onNpcClicked(event));
+        this.clickedListeners.stream().forEach(listener -> listener.onNpcClicked(event));
+    }
+
+    @Override
+    public Reactive<Integer> getRenderDistanceReactive() {
+        return this.renderDistance;
     }
 
     @Override
     public int hashCode() {
-        return this.location.getWorld().hashCode() + this.uuid.hashCode() + this.entityId;
+        return this.getWorld().getKey().hashCode() + this.uuid.hashCode() + this.entityId;
     }
 
 }

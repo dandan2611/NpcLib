@@ -29,8 +29,8 @@ public class PacketStationImpl implements PacketStation<PacketContainer> {
         profile.getProperties().clear();
         profile.getProperties().put("textures",
                 new WrappedSignedProperty("textures",
-                        npc.getSkin().getValue(),
-                        npc.getSkin().getSignature()));
+                        npc.getSkinReactive().get().getValue(),
+                        npc.getSkinReactive().get().getSignature()));
 
         var packet = new PacketContainer(PacketType.Play.Server.PLAYER_INFO);
         packet.getPlayerInfoActions().write(0,
@@ -59,11 +59,11 @@ public class PacketStationImpl implements PacketStation<PacketContainer> {
         var packet = new PacketContainer(PacketType.Play.Server.NAMED_ENTITY_SPAWN);
         packet.getIntegers().write(0, npc.getEntityId());
         packet.getUUIDs().write(0, npc.getUUID());
-        packet.getDoubles().write(0, npc.getLocation().getX());
-        packet.getDoubles().write(1, npc.getLocation().getY());
-        packet.getDoubles().write(2, npc.getLocation().getZ());
-        packet.getBytes().write(0, (byte) (npc.getLocation().getYaw() * 256.0F / 360.0F));
-        packet.getBytes().write(1, (byte) (npc.getLocation().getPitch() * 256.0F / 360.0F));
+        packet.getDoubles().write(0, npc.getLocationReactive().get().getX());
+        packet.getDoubles().write(1, npc.getLocationReactive().get().getY());
+        packet.getDoubles().write(2, npc.getLocationReactive().get().getZ());
+        packet.getBytes().write(0, (byte) (npc.getLocationReactive().get().getYaw() * 256.0F / 360.0F));
+        packet.getBytes().write(1, (byte) (npc.getLocationReactive().get().getPitch() * 256.0F / 360.0F));
         if (preprocessor != null)
             preprocessor.accept(packet);
         ProtocolLibrary.getProtocolManager().sendServerPacket(player, packet);

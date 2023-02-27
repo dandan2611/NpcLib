@@ -20,6 +20,8 @@ public final class NpcConfig {
 
     private boolean global = true;
 
+    private Integer renderDistance = null;
+
     private NpcConfig(@NotNull Location location, @NotNull Skin skin) {
         this.location = location;
         this.skin = skin;
@@ -42,8 +44,17 @@ public final class NpcConfig {
         return this;
     }
 
+    public NpcConfig setRenderDistance(Integer renderDistance) {
+        this.renderDistance = renderDistance;
+        return this;
+    }
+
     public boolean isGlobal() {
         return global;
+    }
+
+    public Integer getRenderDistance() {
+        return renderDistance;
     }
 
 }

@@ -21,8 +21,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class NpcLibPlugin extends JavaPlugin {
 
-    public static final int RENDER_DISTANCE = 64;
-
     private static NpcLibPlugin INSTANCE;
 
     private NpcLibImpl npcLib;

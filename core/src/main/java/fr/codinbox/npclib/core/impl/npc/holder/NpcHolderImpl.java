@@ -8,6 +8,7 @@ import fr.codinbox.npclib.api.npc.Npc;
 import fr.codinbox.npclib.api.npc.NpcConfig;
 import fr.codinbox.npclib.api.npc.event.NpcClickedEvent;
 import fr.codinbox.npclib.api.npc.holder.NpcHolder;
+import fr.codinbox.npclib.api.npc.holder.NpcHolderConfiguration;
 import fr.codinbox.npclib.core.NpcLibPlugin;
 import fr.codinbox.npclib.core.impl.npc.NpcImpl;
 import fr.codinbox.npclib.core.listener.PlayerJoinListener;
@@ -39,11 +40,14 @@ public class NpcHolderImpl implements NpcHolder {
 
     private final NpcHolderImpl instance = this;
 
+    private final NpcHolderConfiguration configuration;
+
     public NpcHolderImpl(@NotNull Plugin plugin) {
         this.plugin = plugin;
         this.npcs = new HashMap<>();
         this.worldNpcs = new HashMap<>();
         this.playerRenderedNpcs = new HashMap<>();
+        this.configuration = new NpcHolderConfigurationImpl();
 
         plugin.getServer().getPluginManager().registerEvents(new PlayerJoinListener(this), plugin);
         plugin.getServer().getPluginManager().registerEvents(new PlayerMoveListener(this), plugin);
@@ -88,9 +92,9 @@ public class NpcHolderImpl implements NpcHolder {
     public @NotNull Npc createNpc(@NotNull NpcConfig config) {
         int id = this.generateNpcId();
         UUID uuid = UUID.randomUUID();
-        var npc = new NpcImpl(config.getLocation(), config.getSkin(), id, uuid, config.isGlobal());
+        var npc = new NpcImpl(this, id, uuid, config);
         this.npcs.put(npc.getEntityId(), npc);
-        this.worldNpcs.computeIfAbsent(npc.getLocation().getWorld(), k -> new HashSet<>()).add(npc);
+        this.worldNpcs.computeIfAbsent(npc.getLocationReactive().get().getWorld(), k -> new HashSet<>()).add(npc);
         return npc;
     }
 
@@ -129,20 +133,20 @@ public class NpcHolderImpl implements NpcHolder {
     }
 
     @Override
-    public void tickNpc(@NotNull Npc npc, @NotNull Player player) {
-        if (!npc.isGlobal() && npc.getViewers().contains(player.getUniqueId()))
+    public void checkVisibility(@NotNull Npc npc, @NotNull Player player) {
+        if (!npc.getGlobalReactive().get() && npc.getViewersReactive().get().contains(player.getUniqueId()))
             return;
 
         var playerLocation = player.getLocation();
-        var npcLocation = npc.getLocation();
+        var npcLocation = npc.getLocationReactive().get();
         var distance = playerLocation.getWorld().getKey().equals(npcLocation.getWorld().getKey())
                 ? playerLocation.distance(npcLocation)
                 : Double.MAX_VALUE;
 
         var rendered = this.isRendered(npc, player);
-        if (distance <= NpcLibPlugin.RENDER_DISTANCE && !rendered)
+        if (distance <= npc.getRenderDistanceReactive().get() && !rendered)
             this.setRendered(npc, player, true);
-        else if (distance > NpcLibPlugin.RENDER_DISTANCE && rendered)
+        else if (distance > npc.getRenderDistanceReactive().get() && rendered)
             this.setRendered(npc, player, false);
     }
 
@@ -150,6 +154,11 @@ public class NpcHolderImpl implements NpcHolder {
     public @NotNull Set<@NotNull Npc> getShownNpcs(@NotNull Player player) {
         return this.playerRenderedNpcs.getOrDefault(player.getUniqueId(), new HashSet<>()).stream()
                 .collect(Collectors.toUnmodifiableSet());
+    }
+
+    @Override
+    public @NotNull NpcHolderConfiguration getConfiguration() {
+        return this.configuration;
     }
 
 }
