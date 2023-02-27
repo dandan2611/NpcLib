@@ -114,7 +114,7 @@ public class NpcHolderImpl implements NpcHolder {
 
     @Override
     public @NotNull Set<@NotNull Npc> getNpcs() {
-        return null;
+        return Set.copyOf(this.npcs.values());
     }
 
     @Override
