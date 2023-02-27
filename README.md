@@ -1,26 +1,34 @@
 # NpcLib
 
+![](https://git.codinbox.fr/codinbox/npclib/badges/master/pipeline.svg)
+![](https://img.shields.io/badge/Supported%20versions-1.19.3%2B-9cf)
+[![Release - 1.19.3](https://img.shields.io/badge/Release-1.19.3-2ea44f)](https://git.codinbox.fr/api/v4/projects/29/jobs/artifacts/master/raw/core/build/libs/npclib-1.0.0-SNAPSHOT-all.jar?job=build-deploy)
+
+**The [GitHub repository](https://github.com/dandan2611/NpcLib) associated with this project is a mirror of the official [GitLab repository](https://git.codinbox.fr/codinbox/npclib).**
+
 NpcLib is a library for creating NPCs in Minecraft. 
 It is designed to be easy to use and to be able to be used in any Bukkit plugin.
 
 ## Features
 
-| Feature | Description                                         | Implemented |
-| --- |-----------------------------------------------------| --- |
-| Creation | Create NPCs with a name, skin, and location         | ✅ |
-| Interaction | Interact with NPCs by clicking on them              | ✅ |
-| Removal | Remove NPCs from the world                          | ✅ |
-| Movement | Move NPCs around the world                          | ✅ |
-| Animation | Play animations on NPCs                             | ❌ |
-| Configuration | Configure NPCs with a complete configuration object | ✅ |
+| Feature | Description                                                                                                |
+| --- |------------------------------------------------------------------------------------------------------------|
+| Creation of NPCs | 🏗️ Create/Delete NPCs with a name, skin and position                                                      |
+| Interacting with NPCs | 🎧 Listen to click events on NPCs                                                                          |
+| Fully reactive | 🚀 Listen to every events related to NPCs and their properties (see [Reactive objects](#reactive-objects)) |
+
+### What's coming next?
+
+- [ ] Add support for animations
 
 ## Installation
 
-### Plugin
+1. Install latest version of [ProtocolLib](https://github.com/dmulloy2/ProtocolLib) on your server.
+2. Download the latest [release](https://git.codinbox.fr/api/v4/projects/29/jobs/artifacts/master/raw/core/build/libs/npclib-1.0.0-SNAPSHOT-all.jar?job=build-deploy) and put it in your server `plugins` folder.
+3. Import the NpcLib API in your project using [Maven](https://maven.apache.org/) or [Gradle](https://gradle.org/).
+4. Put the `depends: [NpcLib]` in your plugin.yml.
 
-[![Release - 1.19.3](https://img.shields.io/badge/Release-1.19.3-2ea44f)](https://git.codinbox.fr/api/v4/projects/29/jobs/artifacts/master/raw/core/build/libs/npclib-1.0.0-SNAPSHOT-all.jar?job=build-deploy)
-
-### API: Gradle
+### Example of importing the API with Gradle (Kotlin)
 
 ```kotlin
 repositories {
@@ -36,21 +44,25 @@ dependencies {
 
 ## Usage
 
-Do not forget to put the `depends: [NpcLib]` in your plugin.yml.
+### Reactive objects
 
-Create a new NpcHolder, the NpcHolder is responsible for managing NPCs for a specific plugin.
-I recommend creating the NpcHolder in the onEnable method of your plugin.
+A reactive object is an object that can have a value assigned of a specific type.
+Developers can bind listeners to a reactive object in order to be notified when the value changes.
 
-````java
-class MyPlugin extends JavaPlugin {
-    private NpcHolder npcHolder;
-    
-    @Override
-    public void onEnable() {
-        this.npcHolder = NpcLib.api().createHolder(this);
-    }
-}
-````
+Reactive objects can also be bound to each other, in this case, when the value of one reactive object changes, the value of the other reactive object will be updated.
+
+In this library, every property that constitutes an NPC is a reactive object, this allows you to listen to every change made to the NPC and edit it in real time.
+This also allows the library to update NPCs in real time when a property changes.
+
+### NPC Holders
+
+A NPC holder is an object that manages the creation and deletion of NPCs for a specific plugin.
+A signe plugin can only have one NPC holder.
+
+In order to create an NPC holder, you must use the `NpcLib.api().createHolder(Plugin)` method.
+It is recommended to create the holder in the `onEnable` method of your plugin.
+
+### Creating NPCs
 
 You can then use your holder in order to create and manage your NPCs!
 
@@ -82,3 +94,5 @@ class MyNpcSpawner {
     }
 }
 ````
+
+After creating the NPC, the holder will automatically manage the lifecycle of the NPC :)
