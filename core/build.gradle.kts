@@ -25,6 +25,7 @@ dependencies {
     implementation("commons-io:commons-io:2.11.0")
     compileOnly("io.papermc.paper:paper-api:1.19.3-R0.1-SNAPSHOT")
     compileOnly("com.github.dmulloy2:ProtocolLib:master-SNAPSHOT")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.9.2")
 }
 
 val targetJavaVersion = JavaVersion.VERSION_17
@@ -64,5 +65,8 @@ tasks {
 tasks {
     build {
         dependsOn("shadowJar")
+    }
+    test {
+        useJUnitPlatform()
     }
 }
