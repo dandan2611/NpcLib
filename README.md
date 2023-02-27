@@ -5,13 +5,14 @@ It is designed to be easy to use and to be able to be used in any Bukkit plugin.
 
 ## Features
 
-| Feature | Description | Implemented |
-| --- | --- | --- |
-| NPC Creation | Create NPCs with a name, skin, and location | ✅ |
-| NPC Interaction | Interact with NPCs by clicking on them | ✅ |
-| NPC Removal | Remove NPCs from the world | ❌ |
-| NPC Movement | Move NPCs around the world | ❌ |
-| NPC Animation | Play animations on NPCs | ❌ |
+| Feature | Description                                         | Implemented |
+| --- |-----------------------------------------------------| --- |
+| Creation | Create NPCs with a name, skin, and location         | ✅ |
+| Interaction | Interact with NPCs by clicking on them              | ✅ |
+| Removal | Remove NPCs from the world                          | ❌ |
+| Movement | Move NPCs around the world                          | ❌ |
+| Animation | Play animations on NPCs                             | ❌ |
+| Configuration | Configure NPCs with a complete configuration object | ❌ |
 
 ## Installation
 
