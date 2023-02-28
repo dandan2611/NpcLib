@@ -8,6 +8,7 @@ import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.UUID;
 
 public class PlayerMoveListener implements Listener {
@@ -41,7 +42,7 @@ public class PlayerMoveListener implements Listener {
         var player = event.getPlayer();
         var location = player.getLocation();
         this.lastLocations.put(player.getUniqueId(), location);
-        holder.getShownNpcs(player).forEach(npc -> holder.setRendered(npc, player, false));
+        holder.getRenderedNpcs(player).forEach(npc -> Objects.requireNonNull(npc.getViewer(player.getUniqueId())).getRendered().set(false));
         holder.getNpcsInWorld(location.getWorld()).forEach(npc -> holder.performChecks(npc, player));
     }
 

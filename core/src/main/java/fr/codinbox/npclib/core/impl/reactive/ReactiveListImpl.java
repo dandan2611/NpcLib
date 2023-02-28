@@ -160,6 +160,25 @@ public class ReactiveListImpl<T> extends ArrayList<T> implements ReactiveList<T>
     }
 
     @Override
+    public T set(int index, T element, boolean notify) {
+        if (notify) {
+            return set(index, element);
+        } else {
+            return super.set(index, element);
+        }
+    }
+
+    @Override
+    public void set(List<T> value, boolean notify) {
+        if (notify) {
+            set(value);
+        } else {
+            super.clear();
+            super.addAll(value);
+        }
+    }
+
+    @Override
     public void bind(Reactive<List<T>> other) {
         throw new UnsupportedOperationException("Not supported");
     }

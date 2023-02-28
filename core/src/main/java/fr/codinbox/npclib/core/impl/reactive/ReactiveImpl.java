@@ -41,6 +41,14 @@ public class ReactiveImpl<T> implements Reactive<T> {
     }
 
     @Override
+    public void set(T value, boolean notify) {
+        if (notify)
+            set(value);
+        else
+            this.value = value;
+    }
+
+    @Override
     public void addListener(ReactiveListener<T> listener) {
         listenerList.add(listener);
     }

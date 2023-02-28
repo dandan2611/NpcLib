@@ -6,17 +6,23 @@ import fr.codinbox.npclib.api.npc.event.NpcClickedEvent;
 import fr.codinbox.npclib.api.npc.event.NpcClickedListener;
 import fr.codinbox.npclib.api.npc.holder.NpcHolder;
 import fr.codinbox.npclib.api.npc.skin.Skin;
+import fr.codinbox.npclib.api.npc.viewer.NpcRenderLogic;
+import fr.codinbox.npclib.api.npc.viewer.NpcViewer;
 import fr.codinbox.npclib.api.reactive.Reactive;
 import fr.codinbox.npclib.api.reactive.ReactiveList;
-import fr.codinbox.npclib.api.reactive.ReactiveListener;
+import fr.codinbox.npclib.api.reactive.ReactiveMap;
+import fr.codinbox.npclib.core.NpcLibPlugin;
+import fr.codinbox.npclib.core.impl.npc.viewer.NpcViewerImpl;
+import fr.codinbox.npclib.core.impl.npc.viewer.render.WorldDistanceRenderLogic;
 import fr.codinbox.npclib.core.impl.reactive.ReactiveImpl;
 import fr.codinbox.npclib.core.impl.reactive.ReactiveListImpl;
+import fr.codinbox.npclib.core.impl.reactive.ReactiveMapImpl;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class NpcImpl implements Npc {
 
@@ -25,17 +31,19 @@ public class NpcImpl implements Npc {
     private final ReactiveImpl<Skin> skin;
     private int entityId;
     private UUID uuid;
-    private final ReactiveList<UUID> viewers;
+    private final ReactiveMap<UUID, NpcViewer> viewers;
     private final Reactive<Boolean> global;
     private final ReactiveList<NpcClickedListener> clickedListeners;
     private final Reactive<Integer> renderDistance;
     private final Reactive<String> name;
+    private final NpcRenderLogic renderLogic;
 
     public NpcImpl(NpcHolder holder,
                    int entityId,
                    UUID uuid,
                    NpcConfig config) {
         this.holder = holder;
+        this.renderLogic = new WorldDistanceRenderLogic();
 
         this.location = new ReactiveImpl<>(config.getLocation());
         this.location.addListener((r, p, n) -> this.update());
@@ -48,14 +56,8 @@ public class NpcImpl implements Npc {
         this.global = new ReactiveImpl<>(config.isGlobal());
         this.global.addListener((r, p, n) -> this.update());
 
-        this.viewers = new ReactiveListImpl<>();
-        this.viewers.addListener((r, p, n) -> n.forEach(i -> {
-            var pl = Bukkit.getPlayer(i);
-            if (pl == null)
-                return;
-            if (!this.holder.getShownNpcs(i).contains(this))
-                this.holder.performChecks(this, pl);
-        }));
+        this.viewers = new ReactiveMapImpl<>(new ConcurrentHashMap<>());
+        this.viewers.addListener((r, p, n) -> n.values().forEach(NpcViewer::render));
 
         this.clickedListeners = new ReactiveListImpl<>();
 
@@ -93,7 +95,7 @@ public class NpcImpl implements Npc {
     }
 
     @Override
-    public @NotNull ReactiveList<UUID> getViewersReactive() {
+    public @NotNull ReactiveMap<UUID, NpcViewer> getViewersReactive() {
         return this.viewers;
     }
 
@@ -123,13 +125,18 @@ public class NpcImpl implements Npc {
     }
 
     private void update() {
-        var renderers = this.getRenderedFor();
-        for (UUID renderer : renderers) {
-            var pl = Bukkit.getPlayer(renderer);
-            if (pl == null) continue;
-            this.holder.setRendered(this, pl, false);
-            this.holder.setRendered(this, pl, true);
-        }
+        this.getViewersReactive().values()
+                .forEach(NpcViewer::render);
+    }
+
+    @Override
+    public @NotNull NpcRenderLogic getRenderLogic() {
+        return this.renderLogic;
+    }
+
+    @Override
+    public void addViewer(@NotNull UUID uuid) {
+        this.viewers.put(uuid, new NpcViewerImpl(this, uuid, NpcLibPlugin.station()));
     }
 
     @Override

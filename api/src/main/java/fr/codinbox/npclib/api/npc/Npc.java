@@ -4,16 +4,21 @@ import fr.codinbox.npclib.api.npc.event.NpcClickedEvent;
 import fr.codinbox.npclib.api.npc.event.NpcClickedListener;
 import fr.codinbox.npclib.api.npc.holder.NpcHolder;
 import fr.codinbox.npclib.api.npc.skin.Skin;
+import fr.codinbox.npclib.api.npc.viewer.NpcRenderLogic;
+import fr.codinbox.npclib.api.npc.viewer.NpcViewer;
 import fr.codinbox.npclib.api.reactive.Reactive;
 import fr.codinbox.npclib.api.reactive.ReactiveList;
+import fr.codinbox.npclib.api.reactive.ReactiveMap;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public interface Npc {
 
@@ -58,7 +63,6 @@ public interface Npc {
      *
      * @return the NPC entity id
      */
-    @NotNull
     int getEntityId();
 
     /**
@@ -75,7 +79,7 @@ public interface Npc {
      *
      * @return the NPC viewers reactive
      */
-    @NotNull ReactiveList<UUID> getViewersReactive();
+    @NotNull ReactiveMap<UUID, NpcViewer> getViewersReactive();
 
     /**
      * Get if the NPC is global.
@@ -122,16 +126,87 @@ public interface Npc {
      * @return if the NPC is rendered for the player
      */
     default boolean isRenderedFor(@NotNull Player player) {
-        return this.getHolder().getShownNpcs(player).contains(this);
+        return this.getViewersReactive().get(player.getUniqueId()) != null;
     }
 
+    default boolean isRenderedFor(@NotNull UUID uuid) {
+        return this.getViewersReactive().get(uuid) != null;
+    }
+
+    /**
+     * Check if the NPC is rendered for a player.
+     *
+     * @param uuid the player UUID
+     * @return if the NPC is rendered for the player
+     */
     default boolean hasViewer(@NotNull UUID uuid) {
-        return this.getViewersReactive().contains(uuid);
+        return this.getViewersReactive().containsKey(uuid);
     }
 
-    @NotNull
-    default Set<UUID> getRenderedFor() {
-        return this.getHolder().getRenderedPlayers(this);
+    /**
+     * Get the viewer object of a player.
+     *
+     * @param uuid the player UUID
+     * @return the viewer object of the player
+     */
+    default @Nullable NpcViewer getViewer(@NotNull UUID uuid) {
+        return this.getViewersReactive().get(uuid);
     }
+
+    /**
+     * Get the rendered viewers UUIDs.
+     * The rendered viewers are the players that can see the NPC.
+     *
+     * @return the rendered viewers UUIDs
+     */
+    @NotNull
+    default Set<UUID> getRenderers() {
+        return this.getViewersReactive().values().stream()
+                .filter(viewer -> viewer.getRendered().get())
+                .map(NpcViewer::getUuid)
+                .collect(Collectors.toSet());
+    }
+
+    /**
+     * Perform the check to see if the NPC should be rendered for a player, and if so, render it.
+     *
+     * @param uuid the player UUID
+     */
+    default void renderFor(@NotNull UUID uuid) {
+        var viewer = this.getViewer(uuid);
+        if (viewer == null) {
+            // Viewer is not in the cache
+            if (!this.getGlobalReactive().get())
+                return; // NPC is not global
+            // Check if the NPC should be rendered for the viewer
+            var player = Bukkit.getPlayer(uuid);
+            if (player == null)
+                return; // Player is not online
+            if (player.getWorld() != this.getWorld())
+                return; // Player is not in the same world as the NPC
+            if (getRenderLogic().shouldBeRendered(this, player, null)) {
+                this.addViewer(uuid);
+            }
+        } else {
+            // Viewer exists in the cache
+            // Just call the viewer render logic
+            viewer.render();
+        }
+    }
+
+    /**
+     * Get the render logic of the NPC.
+     * The render logic is the object that is responsible for checking if the NPC should be rendered for a player.
+     *
+     * @return the render logic of the NPC
+     */
+    @NotNull NpcRenderLogic getRenderLogic();
+
+    /**
+     * Add a viewer to the NPC.
+     *
+     * @param uuid the viewer UUID
+     */
+    void addViewer(@NotNull UUID uuid);
 
 }

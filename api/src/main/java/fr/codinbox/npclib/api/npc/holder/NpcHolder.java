@@ -24,15 +24,11 @@ public interface NpcHolder {
 
     boolean isRendered(@NotNull Npc npc, @NotNull Player player);
 
-    void setRendered(@NotNull Npc npc, @NotNull Player player, boolean rendered);
-
     void performChecks(@NotNull Npc npc, @NotNull Player player);
 
-    //void hideNpc(@NotNull Npc npc, @NotNull Player player);
+    @NotNull Set<@NotNull Npc> getRenderedNpcs(@NotNull Player player);
 
-    @NotNull Set<@NotNull Npc> getShownNpcs(@NotNull Player player);
-
-    @NotNull Set<@NotNull Npc> getShownNpcs(@NotNull UUID player);
+    @NotNull Set<@NotNull Npc> getRenderedNpcs(@NotNull UUID player);
 
     @NotNull NpcHolderConfiguration getConfiguration();
 

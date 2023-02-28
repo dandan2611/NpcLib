@@ -34,8 +34,6 @@ public class NpcHolderImpl implements NpcHolder {
 
     private final HashMap<World, Set<Npc>> worldNpcs;
 
-    private final HashMap<UUID, Set<Npc>> playerRenderedNpcs;
-
     private final HashMap<UUID, Long> interactions = new HashMap<>();
 
     private final NpcHolderImpl instance = this;
@@ -46,7 +44,6 @@ public class NpcHolderImpl implements NpcHolder {
         this.plugin = plugin;
         this.npcs = new HashMap<>();
         this.worldNpcs = new HashMap<>();
-        this.playerRenderedNpcs = new HashMap<>();
         this.configuration = new NpcHolderConfigurationImpl();
 
         plugin.getServer().getPluginManager().registerEvents(new PlayerJoinListener(this), plugin);
@@ -102,13 +99,8 @@ public class NpcHolderImpl implements NpcHolder {
     public void destroyNpc(@NotNull Npc npc) {
         this.npcs.remove(npc.getEntityId());
         this.worldNpcs.computeIfAbsent(npc.getLocationReactive().get().getWorld(), k -> new HashSet<>()).remove(npc);
-        this.playerRenderedNpcs.values().forEach(set -> set.remove(npc));
-        npc.getViewersReactive().get().forEach(uuid -> {
-            var player = this.plugin.getServer().getPlayer(uuid);
-            if (player != null) {
-                NpcLibPlugin.station().createPlayerDespawnPacket(npc, null, player);
-                NpcLibPlugin.station().createPlayerInfoRemovePacket(npc, null, player);
-            }
+        npc.getViewersReactive().values().forEach(viewer -> {
+            viewer.render();;
         });
     }
 
@@ -124,53 +116,23 @@ public class NpcHolderImpl implements NpcHolder {
 
     @Override
     public boolean isRendered(@NotNull Npc npc, @NotNull Player player) {
-        return this.playerRenderedNpcs.getOrDefault(player.getUniqueId(), new HashSet<>()).contains(npc);
-    }
-
-    @Override
-    public void setRendered(@NotNull Npc npc, @NotNull Player player, boolean rendered) {
-        if (rendered && !this.isRendered(npc, player)) {
-            this.playerRenderedNpcs.computeIfAbsent(player.getUniqueId(), k -> new HashSet<>()).add(npc);
-            NpcLibPlugin.station().createPlayerInfoPacket(npc, null, player);
-            NpcLibPlugin.station().createPlayerSpawnPacket(npc, null, player);
-        }
-        else {
-            this.playerRenderedNpcs.computeIfAbsent(player.getUniqueId(), k -> new HashSet<>()).remove(npc);
-            NpcLibPlugin.station().createPlayerDespawnPacket(npc, null, player);
-            NpcLibPlugin.station().createPlayerInfoRemovePacket(npc, null, player);
-        }
+        return npc.isRenderedFor(player);
     }
 
     @Override
     public void performChecks(@NotNull Npc npc, @NotNull Player player) {
-        if (!npc.getGlobalReactive().get()) {
-            var viewers = npc.getViewersReactive().get();
-            if (this.isRendered(npc, player) && !viewers.contains(player.getUniqueId()))
-                this.setRendered(npc, player, false);
-        }
-
-        var playerLocation = player.getLocation();
-        var npcLocation = npc.getLocationReactive().get();
-        var distance = playerLocation.getWorld().getKey().equals(npcLocation.getWorld().getKey())
-                ? playerLocation.distance(npcLocation)
-                : Double.MAX_VALUE;
-
-        var rendered = this.isRendered(npc, player);
-        if (distance <= npc.getRenderDistanceReactive().get() && !rendered)
-            this.setRendered(npc, player, true);
-        else if (distance > npc.getRenderDistanceReactive().get() && rendered)
-            this.setRendered(npc, player, false);
+        npc.renderFor(player.getUniqueId());
     }
 
     @Override
-    public @NotNull Set<@NotNull Npc> getShownNpcs(@NotNull Player player) {
-        return this.playerRenderedNpcs.getOrDefault(player.getUniqueId(), new HashSet<>()).stream()
-                .collect(Collectors.toUnmodifiableSet());
+    public @NotNull Set<@NotNull Npc> getRenderedNpcs(@NotNull Player player) {
+        return this.getRenderedNpcs(player.getUniqueId());
     }
 
     @Override
-    public @NotNull Set<@NotNull Npc> getShownNpcs(@NotNull UUID player) {
-        return this.playerRenderedNpcs.getOrDefault(player, new HashSet<>()).stream()
+    public @NotNull Set<@NotNull Npc> getRenderedNpcs(@NotNull UUID player) {
+        return this.npcs.values().stream()
+                .filter(npc -> npc.isRenderedFor(player))
                 .collect(Collectors.toUnmodifiableSet());
     }
 
@@ -181,10 +143,7 @@ public class NpcHolderImpl implements NpcHolder {
 
     @Override
     public @NotNull Set<@NotNull UUID> getRenderedPlayers(@NotNull Npc npc) {
-        return this.playerRenderedNpcs.entrySet().stream()
-                .filter(entry -> entry.getValue().contains(npc))
-                .map(HashMap.Entry::getKey)
-                .collect(Collectors.toUnmodifiableSet());
+        return npc.getRenderers();
     }
 
 }
