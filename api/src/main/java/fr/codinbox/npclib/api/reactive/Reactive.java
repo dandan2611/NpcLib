@@ -23,6 +23,15 @@ public interface Reactive<T> extends Listenable<T> {
     void set(T value);
 
     /**
+     * Set the value of the reactive object.
+     * This method allows you to choose if you want to notify the listeners or not.
+     *
+     * @param value The new value of the reactive object.
+     * @param notify If true, the listeners will be notified.
+     */
+    void set(T value, boolean notify);
+
+    /**
      * Bind the reactive object to another reactive object.
      * When the value of provided reactive object is changed, the value of this reactive object will be changed too with
      * the same value.
