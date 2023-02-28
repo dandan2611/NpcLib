@@ -58,8 +58,23 @@ public interface ReactiveList<T> extends Reactive<List<T>>, Cloneable, Listenabl
      */
     void clear();
 
+    /**
+     * Set the element at the specified index.
+     *
+     * @param index the index of the element to replace
+     * @param element the element to be stored at the specified position
+     * @return the element previously at the specified position
+     */
     T set(int index, T element);
 
+    /**
+     * Set the element at the specified index.
+     *
+     * @param index the index of the element to replace
+     * @param element the element to be stored at the specified position
+     * @param notify whether to notify the listeners or not
+     * @return the element previously at the specified position
+     */
     T set(int index, T element, boolean notify);
 
     /**
