@@ -60,6 +60,8 @@ public interface ReactiveList<T> extends Reactive<List<T>>, Cloneable, Listenabl
 
     T set(int index, T element);
 
+    T set(int index, T element, boolean notify);
+
     /**
      * Add an element to the list at the specified index.
      * @param index the index at which the specified element is to be inserted
