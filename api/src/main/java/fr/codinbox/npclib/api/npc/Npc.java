@@ -85,6 +85,11 @@ public interface Npc {
      */
     @NotNull Reactive<Boolean> getGlobalReactive();
 
+    /**
+     * Get the NPC clicked listeners.
+     *
+     * @return the NPC clicked listeners
+     */
     @NotNull ReactiveList<NpcClickedListener> getClickedListeners();
 
     /**
@@ -110,6 +115,12 @@ public interface Npc {
      */
     @NotNull Reactive<String> getNameReactive();
 
+    /**
+     * Check if the NPC is rendered for a player.
+     *
+     * @param player the player
+     * @return if the NPC is rendered for the player
+     */
     default boolean isRenderedFor(@NotNull Player player) {
         return this.getHolder().getShownNpcs(player).contains(this);
     }
