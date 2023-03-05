@@ -8,6 +8,7 @@ import com.comphenix.protocol.wrappers.PlayerInfoData;
 import com.comphenix.protocol.wrappers.WrappedGameProfile;
 import com.comphenix.protocol.wrappers.WrappedSignedProperty;
 import fr.codinbox.npclib.api.npc.Npc;
+import fr.codinbox.npclib.api.npc.animation.AnimationType;
 import fr.codinbox.npclib.api.packet.PacketStation;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import org.bukkit.entity.Player;
@@ -93,6 +94,19 @@ public class PacketStationImpl implements PacketStation<PacketContainer> {
             preprocessor.accept(packet);
         ProtocolLibrary.getProtocolManager().sendServerPacket(player, packet);
         return true;
+    }
+
+    @Override
+    public boolean createEntityAnimationPacket(@NotNull Npc npc,
+                                               @NotNull AnimationType animationType,
+                                               @Nullable Consumer<PacketContainer> preprocessor,
+                                               @NotNull Player player) {
+        var packet = new PacketContainer(PacketType.Play.Server.ANIMATION);
+        packet.getIntegers().write(0, npc.getEntityId());
+        packet.getIntegers().write(1, animationType.getId());
+        if (preprocessor != null)
+            preprocessor.accept(packet);
+        ProtocolLibrary.getProtocolManager().sendServerPacket(player, packet);
     }
 
 }
