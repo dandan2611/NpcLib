@@ -90,4 +90,11 @@ public interface NpcAnimation {
      */
     @NotNull NpcAnimation withoutViewer(@NotNull Player viewer);
 
+    /**
+     * Play the animation.
+     */
+    default void play() {
+        this.getNpc().playAnimation(this);
+    }
+
 }
