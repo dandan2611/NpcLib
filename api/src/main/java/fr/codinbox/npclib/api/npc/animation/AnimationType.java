@@ -1,6 +1,6 @@
 package fr.codinbox.npclib.api.npc.animation;
 
-public enum Animation {
+public enum AnimationType {
 
     SWING_MAIN_ARM(0),
     TAKE_DAMAGE(1),
@@ -11,7 +11,7 @@ public enum Animation {
 
     private final int id;
 
-    Animation(int id) {
+    AnimationType(int id) {
         this.id = id;
     }
 
