@@ -1,7 +1,7 @@
 package fr.codinbox.npclib.api.packet;
 
 import fr.codinbox.npclib.api.npc.Npc;
-import fr.codinbox.npclib.api.npc.animation.Animation;
+import fr.codinbox.npclib.api.npc.animation.AnimationType;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -62,13 +62,13 @@ public interface PacketStation<T> {
      * Create a packet to play an animation for the given player.
      *
      * @param npc the NPC to play the animation for
-     * @param animation the animation to play
+     * @param animationType the animation to play
      * @param preprocessor the packet preprocessor
      * @param player the player to play the animation for
      * @return true if the packet has been created and sent, false otherwise
      */
     boolean createEntityAnimationPacket(@NotNull Npc npc,
-                                        @NotNull Animation animation,
+                                        @NotNull AnimationType animationType,
                                         @Nullable Consumer<T> preprocessor,
                                         @NotNull Player player);
 
