@@ -91,5 +91,5 @@ public class NpcAnimationImpl implements NpcAnimation {
     public @NotNull Set<UUID> getViewers() {
         return this.viewers;
     }
-    
+
 }

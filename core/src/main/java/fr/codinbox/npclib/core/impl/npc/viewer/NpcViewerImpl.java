@@ -1,6 +1,7 @@
 package fr.codinbox.npclib.core.impl.npc.viewer;
 
 import fr.codinbox.npclib.api.npc.Npc;
+import fr.codinbox.npclib.api.npc.animation.AnimationType;
 import fr.codinbox.npclib.api.npc.viewer.NpcRenderLogic;
 import fr.codinbox.npclib.api.npc.viewer.NpcViewer;
 import fr.codinbox.npclib.api.packet.PacketStation;
@@ -96,6 +97,16 @@ public class NpcViewerImpl implements NpcViewer {
 
         // The player is close enough to the NPC
         this.rendered.set(true);
+    }
+
+    @Override
+    public void playAnimation(@NotNull AnimationType animationType) {
+        var player = player();
+        if (player == null) {
+            // Player is not online
+            return;
+        }
+        this.packetStation.createEntityAnimationPacket(this.npc, animationType, null, player);
     }
 
 }
