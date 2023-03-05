@@ -107,6 +107,7 @@ public class PacketStationImpl implements PacketStation<PacketContainer> {
         if (preprocessor != null)
             preprocessor.accept(packet);
         ProtocolLibrary.getProtocolManager().sendServerPacket(player, packet);
+        return true;
     }
 
 }
