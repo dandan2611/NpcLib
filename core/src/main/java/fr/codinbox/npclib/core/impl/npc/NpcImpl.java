@@ -140,6 +140,14 @@ public class NpcImpl implements Npc {
     }
 
     @Override
+    public void playAnimation(@NotNull NpcAnimation animation) {
+        var animationViewers = animation.getViewers();
+
+        animationViewers.stream()
+                .filter(this::isRenderedFor)
+                .forEach(v -> Objects.requireNonNull(this.getViewer(v)).playAnimation(animation.getAnimationType()));
+    }
+    @Override
     public int hashCode() {
         return this.getWorld().getKey().hashCode() + this.uuid.hashCode() + this.entityId;
     }
