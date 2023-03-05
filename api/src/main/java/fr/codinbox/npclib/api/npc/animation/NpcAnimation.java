@@ -4,6 +4,7 @@ import fr.codinbox.npclib.api.npc.Npc;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Set;
 import java.util.UUID;
 
 public interface NpcAnimation {
@@ -96,5 +97,13 @@ public interface NpcAnimation {
     default void play() {
         this.getNpc().playAnimation(this);
     }
+
+    /**
+     * Get the viewers of the animation.
+     * These are the players who will be able to see the animation <b>if the NPC is rendered to them</b>.
+     *
+     * @return the viewers
+     */
+    @NotNull Set<UUID> getViewers();
 
 }
