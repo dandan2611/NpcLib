@@ -2,6 +2,8 @@ package fr.codinbox.npclib.core.impl.npc;
 
 import fr.codinbox.npclib.api.npc.Npc;
 import fr.codinbox.npclib.api.npc.NpcConfig;
+import fr.codinbox.npclib.api.npc.animation.AnimationType;
+import fr.codinbox.npclib.api.npc.animation.NpcAnimation;
 import fr.codinbox.npclib.api.npc.event.NpcClickedEvent;
 import fr.codinbox.npclib.api.npc.event.NpcClickedListener;
 import fr.codinbox.npclib.api.npc.holder.NpcHolder;
@@ -12,6 +14,7 @@ import fr.codinbox.npclib.api.reactive.Reactive;
 import fr.codinbox.npclib.api.reactive.ReactiveList;
 import fr.codinbox.npclib.api.reactive.ReactiveMap;
 import fr.codinbox.npclib.core.NpcLibPlugin;
+import fr.codinbox.npclib.core.impl.npc.animation.NpcAnimationImpl;
 import fr.codinbox.npclib.core.impl.npc.viewer.NpcViewerImpl;
 import fr.codinbox.npclib.core.impl.npc.viewer.render.WorldDistanceRenderLogic;
 import fr.codinbox.npclib.core.impl.reactive.ReactiveImpl;
@@ -21,6 +24,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -140,6 +144,11 @@ public class NpcImpl implements Npc {
     }
 
     @Override
+    public @NotNull NpcAnimation createAnimation(@NotNull AnimationType animationType) {
+        return new NpcAnimationImpl(this, animationType);
+    }
+
+    @Override
     public void playAnimation(@NotNull NpcAnimation animation) {
         var animationViewers = animation.getViewers();
 
@@ -147,6 +156,7 @@ public class NpcImpl implements Npc {
                 .filter(this::isRenderedFor)
                 .forEach(v -> Objects.requireNonNull(this.getViewer(v)).playAnimation(animation.getAnimationType()));
     }
+
     @Override
     public int hashCode() {
         return this.getWorld().getKey().hashCode() + this.uuid.hashCode() + this.entityId;
