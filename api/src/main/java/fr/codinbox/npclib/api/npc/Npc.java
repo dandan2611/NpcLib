@@ -1,5 +1,7 @@
 package fr.codinbox.npclib.api.npc;
 
+import fr.codinbox.npclib.api.npc.animation.AnimationType;
+import fr.codinbox.npclib.api.npc.animation.NpcAnimation;
 import fr.codinbox.npclib.api.npc.event.NpcClickedEvent;
 import fr.codinbox.npclib.api.npc.event.NpcClickedListener;
 import fr.codinbox.npclib.api.npc.holder.NpcHolder;
@@ -208,5 +210,20 @@ public interface Npc {
      * @param uuid the viewer UUID
      */
     void addViewer(@NotNull UUID uuid);
+
+    /**
+     * Create a new NPC animation from the current NPC.
+     *
+     * @param animationType the animation type
+     * @return the NPC animation
+     */
+    @NotNull NpcAnimation createAnimation(@NotNull AnimationType animationType);
+
+    /**
+     * Play an animation on the NPC.
+     *
+     * @param animation the animation
+     */
+    void playAnimation(@NotNull NpcAnimation animation);
 
 }
