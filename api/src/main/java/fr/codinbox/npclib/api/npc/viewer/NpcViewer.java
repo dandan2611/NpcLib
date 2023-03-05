@@ -1,6 +1,7 @@
 package fr.codinbox.npclib.api.npc.viewer;
 
 import fr.codinbox.npclib.api.npc.Npc;
+import fr.codinbox.npclib.api.npc.animation.AnimationType;
 import fr.codinbox.npclib.api.reactive.Reactive;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -19,5 +20,7 @@ public interface NpcViewer {
     @NotNull Reactive<Boolean> getRendered();
 
     void render();
+
+    void playAnimation(@NotNull AnimationType animationType);
 
 }
