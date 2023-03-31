@@ -212,6 +212,13 @@ public interface Npc {
     void addViewer(@NotNull UUID uuid);
 
     /**
+     * Remove a viewer from the NPC.
+     *
+     * @param uuid the viewer UUID
+     */
+    void removeViewer(@NotNull UUID uuid);
+
+    /**
      * Create a new NPC animation from the current NPC.
      *
      * @param animationType the animation type

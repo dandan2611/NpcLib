@@ -144,6 +144,16 @@ public class NpcImpl implements Npc {
     }
 
     @Override
+    public void removeViewer(@NotNull UUID uuid) {
+        var viewer = this.getViewer(uuid);
+
+        if (viewer == null)
+            return;
+        viewer.getRendered().set(false); // Delete the rendered NPC for the player
+        this.viewers.remove(uuid);
+    }
+
+    @Override
     public @NotNull NpcAnimation createAnimation(@NotNull AnimationType animationType) {
         return new NpcAnimationImpl(this, animationType);
     }
