@@ -111,7 +111,7 @@ public class NpcHolderImpl implements NpcHolder {
 
     @Override
     public @NotNull Set<@NotNull Npc> getNpcsInWorld(@NotNull World world) {
-        return this.worldNpcs.getOrDefault(world, Set.of());
+        return Set.copyOf(this.worldNpcs.getOrDefault(world, Set.of()));
     }
 
     @Override
