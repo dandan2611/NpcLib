@@ -72,4 +72,28 @@ public interface PacketStation<T> {
                                         @Nullable Consumer<T> preprocessor,
                                         @NotNull Player player);
 
+    /**
+     * Create a packet to change the NPC's head rotation for the given player.
+     *
+     * @param npc the NPC to change the head rotation for
+     * @param preprocessor the packet preprocessor
+     * @param player the player to change the head rotation for
+     * @return true if the packet has been created and sent, false otherwise
+     */
+    boolean createEntityHeadRotationPacket(@NotNull Npc npc,
+                                           @Nullable Consumer<T> preprocessor,
+                                           @NotNull Player player);
+
+    /**
+     * Create a metadata packet to send all the NPC's metadata to the given player.
+     *
+     * @param npc the NPC to send the metadata for
+     * @param preprocessor the packet preprocessor
+     * @param player the player to send the metadata to
+     * @return true if the packet has been created and sent, false otherwise
+     */
+    boolean createEntityMetadataPacket(@NotNull Npc npc,
+                                       @Nullable Consumer<T> preprocessor,
+                                       @NotNull Player player);
+
 }

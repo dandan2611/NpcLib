@@ -3,10 +3,7 @@ package fr.codinbox.npclib.core.impl.packet;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketContainer;
-import com.comphenix.protocol.wrappers.EnumWrappers;
-import com.comphenix.protocol.wrappers.PlayerInfoData;
-import com.comphenix.protocol.wrappers.WrappedGameProfile;
-import com.comphenix.protocol.wrappers.WrappedSignedProperty;
+import com.comphenix.protocol.wrappers.*;
 import fr.codinbox.npclib.api.npc.Npc;
 import fr.codinbox.npclib.api.npc.animation.AnimationType;
 import fr.codinbox.npclib.api.packet.PacketStation;
@@ -106,6 +103,37 @@ public class PacketStationImpl implements PacketStation<PacketContainer> {
         packet.getIntegers().write(1, animationType.getId());
         if (preprocessor != null)
             preprocessor.accept(packet);
+        ProtocolLibrary.getProtocolManager().sendServerPacket(player, packet);
+        return true;
+    }
+
+    @Override
+    public boolean createEntityHeadRotationPacket(@NotNull Npc npc, @Nullable Consumer<PacketContainer> preprocessor, @NotNull Player player) {
+        var packet = new PacketContainer(PacketType.Play.Server.ENTITY_HEAD_ROTATION);
+        var location = npc.getLocationReactive().get();
+
+        packet.getIntegers().write(0, npc.getEntityId());
+        packet.getBytes().write(0, (byte) (location.getYaw() * 256.0F / 360.0F));
+        if (preprocessor != null)
+            preprocessor.accept(packet);
+        ProtocolLibrary.getProtocolManager().sendServerPacket(player, packet);
+        return true;
+    }
+
+    @Override
+    public boolean createEntityMetadataPacket(@NotNull Npc npc,
+                                              @Nullable Consumer<PacketContainer> preprocessor,
+                                              @NotNull Player player) {
+        var packet = new PacketContainer(PacketType.Play.Server.ENTITY_METADATA);
+        // Display all skin parts
+        byte finalByte = 0;
+        for (var i = 0; i < 8; i++)
+            finalByte |= 1 << i;
+        packet.getModifier().writeDefaults();
+        packet.getIntegers().write(0, npc.getEntityId());
+        var watcher = new WrappedDataWatcher();
+        watcher.setObject(new WrappedDataWatcher.WrappedDataWatcherObject(17, WrappedDataWatcher.Registry.get(Byte.class)), finalByte);
+        packet.getWatchableCollectionModifier().write(0, watcher.getWatchableObjects());
         ProtocolLibrary.getProtocolManager().sendServerPacket(player, packet);
         return true;
     }

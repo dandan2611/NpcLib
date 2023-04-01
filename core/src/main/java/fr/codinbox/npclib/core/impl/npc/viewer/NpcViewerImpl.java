@@ -66,6 +66,8 @@ public class NpcViewerImpl implements NpcViewer {
             // The NPC should be rendered
             this.packetStation.createPlayerInfoPacket(this.npc, null, player);
             this.packetStation.createPlayerSpawnPacket(this.npc, null, player);
+            //this.packetStation.createEntityMetadataPacket(this.npc, null, player);
+            this.packetStation.createEntityHeadRotationPacket(this.npc, null, player);
         } else {
             // The NPC should be destroyed
             this.packetStation.createPlayerDespawnPacket(this.npc, null, player);
