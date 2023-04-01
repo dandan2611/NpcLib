@@ -59,7 +59,7 @@ public class NpcHolderImpl implements NpcHolder {
 
                 if (interactions.containsKey(player.getUniqueId())
                         && System.currentTimeMillis() - interactions.get(player.getUniqueId()) < 100) {
-                    event.setCancelled(true);
+                    //event.setCancelled(true);
                     return;
                 }
                 interactions.put(player.getUniqueId(), System.currentTimeMillis());
@@ -73,7 +73,7 @@ public class NpcHolderImpl implements NpcHolder {
                 getNpcsInWorld(event.getPlayer().getWorld()).stream().filter(npc -> npc.getEntityId() == id).forEach(npc -> {
                     var e = new NpcClickedEvent(npc, player, instance, interactionType);
                     npc.callClickedListeners(e);
-                    event.setCancelled(true);
+                    //event.setCancelled(true);
                 });
             }
         });
