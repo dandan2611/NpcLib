@@ -1,11 +1,11 @@
 package fr.codinbox.npclib.api.npc.skin;
 
-public class LegacySkin implements Skin {
+public class ValueSignatureSkin implements Skin {
 
     private final String value;
     private final String signature;
 
-    protected LegacySkin(String value, String signature) {
+    protected ValueSignatureSkin(String value, String signature) {
         this.value = value;
         this.signature = signature;
     }

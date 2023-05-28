@@ -5,8 +5,8 @@ import org.jetbrains.annotations.NotNull;
 public interface Skin {
 
     @NotNull
-    static LegacySkin fromValueAndSignature(@NotNull String value, @NotNull String signature) {
-        return new LegacySkin(value, signature);
+    static ValueSignatureSkin fromValueAndSignature(@NotNull String value, @NotNull String signature) {
+        return new ValueSignatureSkin(value, signature);
     }
 
     /**
