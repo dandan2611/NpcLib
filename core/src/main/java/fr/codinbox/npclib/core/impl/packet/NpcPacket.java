@@ -37,7 +37,7 @@ public interface NpcPacket {
                         null
                 )
         ));
-        profile.sendServerPacket(player, packet);
+        protocolManager.sendServerPacket(player, packet);
     };
 
     NpcPacket PLAYER_INFO_REMOVE = (protocolManager, player, npc) -> {
