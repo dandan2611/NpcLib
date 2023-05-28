@@ -11,6 +11,7 @@ import fr.codinbox.npclib.api.npc.holder.NpcHolder;
 import fr.codinbox.npclib.core.impl.npc.NpcImpl;
 import fr.codinbox.npclib.core.listener.PlayerJoinListener;
 import fr.codinbox.npclib.core.listener.PlayerMoveListener;
+import fr.codinbox.npclib.core.listener.PlayerQuitListener;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -36,15 +37,13 @@ public class NpcHolderImpl implements NpcHolder {
 
     private final NpcHolderImpl instance = this;
 
-    private final NpcHolderConfiguration configuration;
-
     public NpcHolderImpl(@NotNull Plugin plugin) {
         this.plugin = plugin;
         this.npcs = new HashMap<>();
         this.worldNpcs = new HashMap<>();
-        this.configuration = new NpcHolderConfigurationImpl();
 
         plugin.getServer().getPluginManager().registerEvents(new PlayerJoinListener(this), plugin);
+        plugin.getServer().getPluginManager().registerEvents(new PlayerQuitListener(this), plugin);
         plugin.getServer().getPluginManager().registerEvents(new PlayerMoveListener(this), plugin);
 
         ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(plugin, PacketType.Play.Client.USE_ENTITY) {

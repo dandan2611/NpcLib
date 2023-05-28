@@ -4,17 +4,18 @@ import fr.codinbox.npclib.api.npc.holder.NpcHolder;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
-public class PlayerJoinListener implements Listener {
+public class PlayerQuitListener implements Listener {
 
     private final NpcHolder holder;
 
-    public PlayerJoinListener(NpcHolder holder) {
+    public PlayerQuitListener(NpcHolder holder) {
         this.holder = holder;
     }
 
     @EventHandler
-    private void onJoin(PlayerJoinEvent event) {
+    private void onJoin(PlayerQuitEvent event) {
         var player = event.getPlayer();
         var location = player.getLocation();
 
