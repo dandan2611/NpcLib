@@ -9,6 +9,7 @@ import fr.codinbox.npclib.api.npc.NpcConfig;
 import fr.codinbox.npclib.api.npc.event.NpcClickedEvent;
 import fr.codinbox.npclib.api.npc.holder.NpcHolder;
 import fr.codinbox.npclib.core.impl.npc.NpcImpl;
+import fr.codinbox.npclib.core.impl.packet.listener.NpcInteractionPacketListener;
 import fr.codinbox.npclib.core.listener.PlayerJoinListener;
 import fr.codinbox.npclib.core.listener.PlayerMoveListener;
 import fr.codinbox.npclib.core.listener.PlayerQuitListener;
@@ -46,34 +47,7 @@ public class NpcHolderImpl implements NpcHolder {
         plugin.getServer().getPluginManager().registerEvents(new PlayerQuitListener(this), plugin);
         plugin.getServer().getPluginManager().registerEvents(new PlayerMoveListener(this), plugin);
 
-        ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(plugin, PacketType.Play.Client.USE_ENTITY) {
-            @Override
-            public void onPacketReceiving(PacketEvent event) {
-                var packet = event.getPacket();
-                var id = packet.getIntegers().read(0);
-                var action = packet.getEnumEntityUseActions().read(0);
-                var player = event.getPlayer();
-
-                if (interactions.containsKey(player.getUniqueId())
-                        && System.currentTimeMillis() - interactions.get(player.getUniqueId()) < 100) {
-                    //event.setCancelled(true);
-                    return;
-                }
-                interactions.put(player.getUniqueId(), System.currentTimeMillis());
-
-                final NpcClickedEvent.InteractionType interactionType = switch (action.getAction()) {
-                    case ATTACK -> NpcClickedEvent.InteractionType.ATTACK;
-                    case INTERACT -> NpcClickedEvent.InteractionType.INTERACT;
-                    case INTERACT_AT -> NpcClickedEvent.InteractionType.INTERACT_AT;
-                };
-
-                getNpcsInWorld(event.getPlayer().getWorld()).stream().filter(npc -> npc.getEntityId() == id).forEach(npc -> {
-                    var e = new NpcClickedEvent(npc, player, instance, interactionType);
-                    npc.callClickedListeners(e);
-                    //event.setCancelled(true);
-                });
-            }
-        });
+        ProtocolLibrary.getProtocolManager().addPacketListener(new NpcInteractionPacketListener(plugin, this));
     }
 
     private int generateNpcId() {
