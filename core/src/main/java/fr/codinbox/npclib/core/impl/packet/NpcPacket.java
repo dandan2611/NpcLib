@@ -2,6 +2,7 @@ package fr.codinbox.npclib.core.impl.packet;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.comphenix.protocol.wrappers.PlayerInfoData;
@@ -16,7 +17,7 @@ import java.util.Set;
 
 public interface NpcPacket {
 
-    NpcPacket PLAYER_INFO_ADD = (player, npc) -> {
+    NpcPacket PLAYER_INFO_ADD = (protocolManager, player, npc) -> {
         var profile = new WrappedGameProfile(npc.getUUID(), npc.getName());
         profile.getProperties().clear();
         profile.getProperties().put("textures",
@@ -36,10 +37,17 @@ public interface NpcPacket {
                         null
                 )
         ));
-        ProtocolLibrary.getProtocolManager().sendServerPacket(player, packet);
+        profile.sendServerPacket(player, packet);
     };
 
-    NpcPacket PLAYER_SPAWN = (player, npc) -> {
+    NpcPacket PLAYER_INFO_REMOVE = (protocolManager, player, npc) -> {
+        var packet = new PacketContainer(PacketType.Play.Server.PLAYER_INFO_REMOVE);
+        packet.getUUIDLists()
+                .write(0, Collections.singletonList(npc.getUUID()));
+        protocolManager.sendServerPacket(player, packet);
+    };
+
+    NpcPacket PLAYER_SPAWN = (protocolManager, player, npc) -> {
         var location = npc.getLocation();
         var packet = new PacketContainer(PacketType.Play.Server.NAMED_ENTITY_SPAWN);
         packet.getIntegers().write(0, npc.getEntityId());
@@ -49,9 +57,9 @@ public interface NpcPacket {
         packet.getDoubles().write(2, location.getZ());
         packet.getBytes().write(0, (byte) (location.getYaw() * 256.0F / 360.0F));
         packet.getBytes().write(1, (byte) (location.getPitch() * 256.0F / 360.0F));
-        ProtocolLibrary.getProtocolManager().sendServerPacket(player, packet);
+        protocolManager.sendServerPacket(player, packet);
     };
 
-    void send(@NotNull Player player, @NotNull Npc npc);
+    void send(@NotNull ProtocolManager protocolManager, @NotNull Player player, @NotNull Npc npc);
 
 }
