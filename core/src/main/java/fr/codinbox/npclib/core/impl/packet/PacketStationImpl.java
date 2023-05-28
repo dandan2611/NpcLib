@@ -33,7 +33,7 @@ public class PacketStationImpl implements PacketStation<PacketContainer> {
         var packet = new PacketContainer(PacketType.Play.Server.PLAYER_INFO);
         packet.getPlayerInfoActions().write(0,
                 Set.of(EnumWrappers.PlayerInfoAction.ADD_PLAYER, EnumWrappers.PlayerInfoAction.UPDATE_LISTED));
-        packet.getPlayerInfoDataLists().write(1, Collections.singletonList(
+        /*packet.getPlayerInfoDataLists().write(1, Collections.singletonList(
                 new PlayerInfoData(
                         npc.getUUID(),
                         0,
@@ -43,7 +43,7 @@ public class PacketStationImpl implements PacketStation<PacketContainer> {
                         null,
                         null
                 )
-        ));
+        ));*/
         if (preprocessor != null)
             preprocessor.accept(packet);
         ProtocolLibrary.getProtocolManager().sendServerPacket(player, packet);
