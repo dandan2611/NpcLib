@@ -41,6 +41,8 @@ run-tests:
 
 deploy:
   stage: deploy
+  only:
+    - master
   script:
     - gradle build publish -x test -PnpclibAuthHeaderName=Job-Token -PnpclibAuthHeaderValue=${CI_JOB_TOKEN}
   cache:
