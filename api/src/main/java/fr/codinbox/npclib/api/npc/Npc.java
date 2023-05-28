@@ -8,16 +8,15 @@ import fr.codinbox.npclib.api.npc.holder.NpcHolder;
 import fr.codinbox.npclib.api.npc.skin.Skin;
 import fr.codinbox.npclib.api.npc.viewer.NpcRenderLogic;
 import fr.codinbox.npclib.api.npc.viewer.NpcViewer;
-import fr.codinbox.npclib.api.reactive.Reactive;
-import fr.codinbox.npclib.api.reactive.ReactiveList;
-import fr.codinbox.npclib.api.reactive.ReactiveMap;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Range;
 
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -33,31 +32,13 @@ public interface Npc {
     @NotNull
     NpcHolder getHolder();
 
-    /**
-     * Get the NPC location reactive.
-     *
-     * @return the NPC location reactive
-     */
-    @NotNull
-    Reactive<Location> getLocationReactive();
+    @NotNull Location getLocation();
 
-    /**
-     * Get the NPC world.
-     *
-     * @return the NPC world
-     */
-    @NotNull
-    default World getWorld() {
-        return this.getLocationReactive().get().getWorld();
+    @NotNull default World getWorld() {
+        return this.getLocation().getWorld();
     }
 
-    /**
-     * Get the NPC skin reactive.
-     *
-     * @return the NPC skin reactive
-     */
-    @NotNull
-    Reactive<Skin> getSkinReactive();
+    @NotNull Skin getSkin();
 
     /**
      * Get the NPC entity id.
@@ -76,27 +57,16 @@ public interface Npc {
     @NotNull
     UUID getUUID();
 
-    /**
-     * Get the NPC viewers reactive.
-     *
-     * @return the NPC viewers reactive
-     */
-    @NotNull ReactiveMap<UUID, NpcViewer> getViewersReactive();
+    @NotNull Map<UUID, NpcViewer> getViewers();
 
-    /**
-     * Get if the NPC is global.
-     * If the NPC is global, it will be visible for all players within its range.
-     *
-     * @return if the NPC is global
-     */
-    @NotNull Reactive<Boolean> getGlobalReactive();
+    boolean isGlobal();
 
     /**
      * Get the NPC clicked listeners.
      *
      * @return the NPC clicked listeners
      */
-    @NotNull ReactiveList<NpcClickedListener> getClickedListeners();
+    @NotNull Set<NpcClickedListener> getClickedListeners();
 
     /**
      * Call the NPC clicked listeners.
@@ -105,21 +75,13 @@ public interface Npc {
      */
     void callClickedListeners(@NotNull NpcClickedEvent event);
 
-    /**
-     * Get the NPC render distance reactive.
-     * The render distance is the distance in blocks at which the NPC will be visible.
-     *
-     * @return the NPC render distance reactive
-     */
-    @NotNull Reactive<Integer> getRenderDistanceReactive();
+    @Range(from = 0, to = Integer.MAX_VALUE) int getRenderDistance();
 
-    /**
-     * Get the NPC name reactive.
-     * The name is the name of the NPC. It is displayed above the NPC's head.
-     *
-     * @return the NPC name reactive
-     */
-    @NotNull Reactive<String> getNameReactive();
+    @NotNull String getName();
+
+    default boolean isRenderedFor(@NotNull UUID uuid) {
+        return this.getViewers().get(uuid) != null;
+    }
 
     /**
      * Check if the NPC is rendered for a player.
@@ -128,11 +90,7 @@ public interface Npc {
      * @return if the NPC is rendered for the player
      */
     default boolean isRenderedFor(@NotNull Player player) {
-        return this.getViewersReactive().get(player.getUniqueId()) != null;
-    }
-
-    default boolean isRenderedFor(@NotNull UUID uuid) {
-        return this.getViewersReactive().get(uuid) != null;
+        return this.isRenderedFor(player.getUniqueId());
     }
 
     /**
@@ -142,7 +100,7 @@ public interface Npc {
      * @return if the NPC is rendered for the player
      */
     default boolean hasViewer(@NotNull UUID uuid) {
-        return this.getViewersReactive().containsKey(uuid);
+        return this.getViewers().containsKey(uuid);
     }
 
     /**
@@ -152,7 +110,7 @@ public interface Npc {
      * @return the viewer object of the player
      */
     default @Nullable NpcViewer getViewer(@NotNull UUID uuid) {
-        return this.getViewersReactive().get(uuid);
+        return this.getViewers().get(uuid);
     }
 
     /**
@@ -163,8 +121,8 @@ public interface Npc {
      */
     @NotNull
     default Set<UUID> getRenderers() {
-        return this.getViewersReactive().values().stream()
-                .filter(viewer -> viewer.getRendered().get())
+        return this.getViewers().values().stream()
+                .filter(viewer -> viewer.isRendered())
                 .map(NpcViewer::getUuid)
                 .collect(Collectors.toSet());
     }
@@ -176,12 +134,12 @@ public interface Npc {
      */
     default void renderFor(@NotNull UUID uuid) {
         var viewer = this.getViewer(uuid);
+        var player = Bukkit.getPlayer(uuid);
         if (viewer == null) {
             // Viewer is not in the cache
-            if (!this.getGlobalReactive().get())
+            if (!this.isGlobal())
                 return; // NPC is not global
             // Check if the NPC should be rendered for the viewer
-            var player = Bukkit.getPlayer(uuid);
             if (player == null)
                 return; // Player is not online
             if (player.getWorld() != this.getWorld())
@@ -190,6 +148,8 @@ public interface Npc {
                 this.addViewer(uuid);
             }
         } else {
+            if (player == null) // Player is not online, set the rendered property to false
+                viewer.setRendered(false, false);
             // Viewer exists in the cache
             // Just call the viewer render logic
             viewer.render();

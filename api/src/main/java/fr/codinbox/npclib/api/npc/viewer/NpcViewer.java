@@ -20,6 +20,8 @@ public interface NpcViewer {
 
     void render();
 
+    boolean setRendered(boolean rendered, boolean update);
+
     void playAnimation(@NotNull AnimationType animationType);
 
 }
