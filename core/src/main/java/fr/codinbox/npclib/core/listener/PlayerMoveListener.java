@@ -34,7 +34,7 @@ public class PlayerMoveListener implements Listener {
             return;
         this.lastLocations.put(player.getUniqueId(), location);
 
-        holder.getNpcsInWorld(location.getWorld()).forEach(npc -> holder.performChecks(npc, player));
+        holder.getNpcsInWorld(location.getWorld()).forEach(npc -> holder.updateVisibility(npc, player));
     }
 
     @EventHandler
@@ -42,8 +42,8 @@ public class PlayerMoveListener implements Listener {
         var player = event.getPlayer();
         var location = player.getLocation();
         this.lastLocations.put(player.getUniqueId(), location);
-        holder.getRenderedNpcs(player).forEach(npc -> Objects.requireNonNull(npc.getViewer(player.getUniqueId())).getRendered().set(false));
-        holder.getNpcsInWorld(location.getWorld()).forEach(npc -> holder.performChecks(npc, player));
+        holder.getRenderedNpcs(player).forEach(npc -> Objects.requireNonNull(npc.getViewer(player.getUniqueId())).setRendered(false));
+        holder.getNpcsInWorld(location.getWorld()).forEach(npc -> holder.updateVisibility(npc, player));
     }
 
 }

@@ -8,6 +8,7 @@ import fr.codinbox.npclib.api.npc.Npc;
 import fr.codinbox.npclib.api.npc.NpcConfig;
 import fr.codinbox.npclib.api.npc.event.NpcClickedEvent;
 import fr.codinbox.npclib.api.npc.holder.NpcHolder;
+import fr.codinbox.npclib.api.npc.viewer.NpcViewer;
 import fr.codinbox.npclib.core.impl.npc.NpcImpl;
 import fr.codinbox.npclib.core.impl.packet.listener.NpcInteractionPacketListener;
 import fr.codinbox.npclib.core.listener.PlayerJoinListener;
@@ -62,17 +63,15 @@ public class NpcHolderImpl implements NpcHolder {
         UUID uuid = UUID.randomUUID();
         var npc = new NpcImpl(this, id, uuid, config);
         this.npcs.put(npc.getEntityId(), npc);
-        this.worldNpcs.computeIfAbsent(npc.getLocationReactive().get().getWorld(), k -> new HashSet<>()).add(npc);
+        this.worldNpcs.computeIfAbsent(npc.getWorld(), k -> new HashSet<>()).add(npc);
         return npc;
     }
 
     @Override
     public void destroyNpc(@NotNull Npc npc) {
         this.npcs.remove(npc.getEntityId());
-        this.worldNpcs.computeIfAbsent(npc.getLocationReactive().get().getWorld(), k -> new HashSet<>()).remove(npc);
-        npc.getViewersReactive().values().forEach(viewer -> {
-            viewer.render();;
-        });
+        this.worldNpcs.computeIfAbsent(npc.getWorld(), k -> new HashSet<>()).remove(npc);
+        npc.getViewers().values().forEach(viewer -> viewer.setRendered(false));
     }
 
     @Override
@@ -91,7 +90,7 @@ public class NpcHolderImpl implements NpcHolder {
     }
 
     @Override
-    public void performChecks(@NotNull Npc npc, @NotNull Player player) {
+    public void updateVisibility(@NotNull Npc npc, @NotNull Player player) {
         npc.renderFor(player.getUniqueId());
     }
 
@@ -105,11 +104,6 @@ public class NpcHolderImpl implements NpcHolder {
         return this.npcs.values().stream()
                 .filter(npc -> npc.isRenderedFor(player))
                 .collect(Collectors.toUnmodifiableSet());
-    }
-
-    @Override
-    public @NotNull NpcHolderConfiguration getConfiguration() {
-        return this.configuration;
     }
 
     @Override
