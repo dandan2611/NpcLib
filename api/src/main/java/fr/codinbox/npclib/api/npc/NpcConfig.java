@@ -21,9 +21,9 @@ public final class NpcConfig {
 
     private boolean global = true;
 
-    private Integer renderDistance = null;
+    private Integer renderDistance = 32;
 
-    private String name = "";
+    private String name = "§7";
 
     private NpcConfig(@NotNull Location location, @NotNull Skin skin) {
         this.location = location;
