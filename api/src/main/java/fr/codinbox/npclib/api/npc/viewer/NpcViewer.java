@@ -2,7 +2,6 @@ package fr.codinbox.npclib.api.npc.viewer;
 
 import fr.codinbox.npclib.api.npc.Npc;
 import fr.codinbox.npclib.api.npc.animation.AnimationType;
-import fr.codinbox.npclib.api.reactive.Reactive;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -17,7 +16,7 @@ public interface NpcViewer {
 
     @Nullable Player player();
 
-    @NotNull Reactive<Boolean> getRendered();
+    boolean isRendered();
 
     void render();
 
