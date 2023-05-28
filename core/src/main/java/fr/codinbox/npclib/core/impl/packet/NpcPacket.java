@@ -39,6 +39,19 @@ public interface NpcPacket {
         ProtocolLibrary.getProtocolManager().sendServerPacket(player, packet);
     };
 
+    NpcPacket PLAYER_SPAWN = (player, npc) -> {
+        var location = npc.getLocation();
+        var packet = new PacketContainer(PacketType.Play.Server.NAMED_ENTITY_SPAWN);
+        packet.getIntegers().write(0, npc.getEntityId());
+        packet.getUUIDs().write(0, npc.getUUID());
+        packet.getDoubles().write(0 ,location.getX());
+        packet.getDoubles().write(1, location.getY());
+        packet.getDoubles().write(2, location.getZ());
+        packet.getBytes().write(0, (byte) (location.getYaw() * 256.0F / 360.0F));
+        packet.getBytes().write(1, (byte) (location.getPitch() * 256.0F / 360.0F));
+        ProtocolLibrary.getProtocolManager().sendServerPacket(player, packet);
+    };
+
     void send(@NotNull Player player, @NotNull Npc npc);
 
 }
