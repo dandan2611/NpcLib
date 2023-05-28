@@ -51,7 +51,7 @@ public class NpcHolderImpl implements NpcHolder {
     }
 
     private int generateNpcId() {
-        int id = 100000; // TODO: REWORK
+        int id = 100000; // TODO: Properly generate npc id
         while (this.npcs.containsKey(id)) id++;
         return id;
     }
