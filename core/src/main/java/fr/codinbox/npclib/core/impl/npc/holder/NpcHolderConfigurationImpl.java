@@ -1,6 +1,5 @@
 package fr.codinbox.npclib.core.impl.npc.holder;
 
-import fr.codinbox.npclib.api.npc.holder.NpcHolderConfiguration;
 import fr.codinbox.npclib.api.reactive.Reactive;
 import fr.codinbox.npclib.core.impl.reactive.ReactiveImpl;
 

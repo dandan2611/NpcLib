@@ -8,8 +8,6 @@ import fr.codinbox.npclib.api.npc.Npc;
 import fr.codinbox.npclib.api.npc.NpcConfig;
 import fr.codinbox.npclib.api.npc.event.NpcClickedEvent;
 import fr.codinbox.npclib.api.npc.holder.NpcHolder;
-import fr.codinbox.npclib.api.npc.holder.NpcHolderConfiguration;
-import fr.codinbox.npclib.core.NpcLibPlugin;
 import fr.codinbox.npclib.core.impl.npc.NpcImpl;
 import fr.codinbox.npclib.core.listener.PlayerJoinListener;
 import fr.codinbox.npclib.core.listener.PlayerMoveListener;
