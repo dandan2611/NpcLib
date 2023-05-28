@@ -16,7 +16,7 @@ import java.util.Set;
 
 public interface NpcPacket {
 
-    NpcPacket PLAYER_INFO = (player, npc) -> {
+    NpcPacket PLAYER_INFO_ADD = (player, npc) -> {
         var profile = new WrappedGameProfile(npc.getUUID(), npc.getName());
         profile.getProperties().clear();
         profile.getProperties().put("textures",
