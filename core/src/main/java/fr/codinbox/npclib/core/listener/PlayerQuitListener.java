@@ -3,7 +3,6 @@ package fr.codinbox.npclib.core.listener;
 import fr.codinbox.npclib.api.npc.holder.NpcHolder;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 public class PlayerQuitListener implements Listener {

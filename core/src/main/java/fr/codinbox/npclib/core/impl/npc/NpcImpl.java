@@ -14,13 +14,11 @@ import fr.codinbox.npclib.api.npc.viewer.NpcViewer;
 import fr.codinbox.npclib.core.impl.npc.animation.NpcAnimationImpl;
 import fr.codinbox.npclib.core.impl.npc.viewer.NpcViewerImpl;
 import fr.codinbox.npclib.core.impl.npc.viewer.render.WorldDistanceRenderLogic;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class NpcImpl implements Npc {
 

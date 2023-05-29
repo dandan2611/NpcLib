@@ -1,7 +1,6 @@
 package fr.codinbox.npclib.core.impl.packet.listener;
 
 import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 import fr.codinbox.npclib.api.npc.event.NpcClickedEvent;

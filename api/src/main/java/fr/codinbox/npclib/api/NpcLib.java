@@ -1,7 +1,6 @@
 package fr.codinbox.npclib.api;
 
 import fr.codinbox.npclib.api.npc.holder.NpcHolder;
-import fr.codinbox.npclib.api.packet.PacketStation;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 

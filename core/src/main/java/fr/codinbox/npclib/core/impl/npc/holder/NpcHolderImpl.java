@@ -1,14 +1,9 @@
 package fr.codinbox.npclib.core.impl.npc.holder;
 
-import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.events.PacketAdapter;
-import com.comphenix.protocol.events.PacketEvent;
 import fr.codinbox.npclib.api.npc.Npc;
 import fr.codinbox.npclib.api.npc.NpcConfig;
-import fr.codinbox.npclib.api.npc.event.NpcClickedEvent;
 import fr.codinbox.npclib.api.npc.holder.NpcHolder;
-import fr.codinbox.npclib.api.npc.viewer.NpcViewer;
 import fr.codinbox.npclib.core.impl.npc.NpcImpl;
 import fr.codinbox.npclib.core.impl.packet.listener.NpcInteractionPacketListener;
 import fr.codinbox.npclib.core.listener.PlayerJoinListener;
