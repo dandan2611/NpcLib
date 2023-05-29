@@ -3,15 +3,21 @@ package fr.codinbox.npclib.core.impl.npc.viewer;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketContainer;
+import com.comphenix.protocol.wrappers.EnumWrappers;
+import com.comphenix.protocol.wrappers.Pair;
 import fr.codinbox.npclib.api.npc.Npc;
 import fr.codinbox.npclib.api.npc.animation.AnimationType;
+import fr.codinbox.npclib.api.npc.equipment.NpcEquipment;
 import fr.codinbox.npclib.api.npc.viewer.NpcViewer;
 import fr.codinbox.npclib.core.impl.packet.NpcPacket;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class NpcViewerImpl implements NpcViewer {
@@ -115,6 +121,27 @@ public class NpcViewerImpl implements NpcViewer {
         var packet = new PacketContainer(PacketType.Play.Server.ANIMATION);
         packet.getIntegers().write(0, npc.getEntityId());
         packet.getIntegers().write(1, animationType.getId());
+        protocolManager.sendServerPacket(player, packet);
+    }
+
+    @Override
+    public void updateEquipment(@NotNull NpcEquipment equipment) {
+        var protocolManager = ProtocolLibrary.getProtocolManager();
+        var player = player();
+        if (player == null || !this.rendered) {
+            // Player is not online
+            return;
+        }
+        var packet = new PacketContainer(PacketType.Play.Server.ENTITY_EQUIPMENT);
+        packet.getIntegers().write(0, npc.getEntityId());
+        List<Pair<EnumWrappers.ItemSlot, ItemStack>> list = new ArrayList<>();
+        list.add(new Pair<>(EnumWrappers.ItemSlot.HEAD, equipment.getHelmet()));
+        list.add(new Pair<>(EnumWrappers.ItemSlot.CHEST, equipment.getChestplate()));
+        list.add(new Pair<>(EnumWrappers.ItemSlot.LEGS, equipment.getLeggings()));
+        list.add(new Pair<>(EnumWrappers.ItemSlot.FEET, equipment.getBoots()));
+        list.add(new Pair<>(EnumWrappers.ItemSlot.MAINHAND, equipment.getMainHand()));
+        list.add(new Pair<>(EnumWrappers.ItemSlot.OFFHAND, equipment.getOffHand()));
+        packet.getSlotStackPairLists().write(0, list);
         protocolManager.sendServerPacket(player, packet);
     }
 
