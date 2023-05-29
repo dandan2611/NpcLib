@@ -75,6 +75,7 @@ public class NpcViewerImpl implements NpcViewer {
             NpcPacket.PLAYER_SPAWN.send(ProtocolLibrary.getProtocolManager(), player, this.npc);
             //this.packetStation.createEntityMetadataPacket(this.npc, null, player);
             NpcPacket.HEAD_ROTATION.send(ProtocolLibrary.getProtocolManager(), player, this.npc);
+            this.updateEquipment(this.npc.getEquipment());
         } else {
             // The NPC should be destroyed
             NpcPacket.PLAYER_DESPAWN.send(ProtocolLibrary.getProtocolManager(), player, this.npc);

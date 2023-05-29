@@ -201,6 +201,9 @@ public interface Npc {
      */
     @NotNull NpcEquipment getEquipment();
 
+    /**
+     * Update the NPC equipment for all the viewers.
+     */
     default void updateEquipment() {
         final var equipment = this.getEquipment();
         this.getViewers().values().forEach(npcViewer -> npcViewer.updateEquipment(equipment));
