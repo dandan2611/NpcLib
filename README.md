@@ -15,7 +15,6 @@ It is designed to be easy to use and to be able to be used in any Bukkit plugin.
 |--------------|------------------------------------------------------------------------------------------------------------|
 | NPCs         | 🏗️ Create/Delete NPCs with a name, skin and position                                                      |
 | Interactions | 🎧 Listen to click events on NPCs                                                                          |
-| Reactivity   | 🚀 Listen to every events related to NPCs and their properties (see [Reactive objects](#reactive-objects)) |
 
 ### What's coming next?
 
@@ -24,7 +23,7 @@ It is designed to be easy to use and to be able to be used in any Bukkit plugin.
 ## Installation
 
 1. Install latest version of [ProtocolLib](https://github.com/dmulloy2/ProtocolLib) on your server.
-2. Download the latest [release](https://git.codinbox.fr/api/v4/projects/29/jobs/artifacts/master/raw/core/build/libs/npclib-1.0.0-SNAPSHOT-all.jar?job=deploy) and put it in your server `plugins` folder.
+2. Download the latest [release](https://git.codinbox.fr/api/v4/projects/29/jobs/artifacts/master/raw/core/build/libs/npclib-1.0.1-all.jar?job=deploy) and put it in your server `plugins` folder.
 3. Import the NpcLib API in your project using [Maven](https://maven.apache.org/) or [Gradle](https://gradle.org/).
 4. Put the `depends: [NpcLib]` in your plugin.yml.
 
@@ -38,21 +37,11 @@ repositories {
 }
 
 dependencies {
-    compileOnly("fr.codinbox.npclib:api:1.0.0-SNAPSHOT")
+    compileOnly("fr.codinbox.npclib:api:1.0.1")
 }
 ```
 
 ## Usage
-
-### Reactive objects
-
-A reactive object is an object that can have a value assigned of a specific type.
-Developers can bind listeners to a reactive object in order to be notified when the value changes.
-
-Reactive objects can also be bound to each other, in this case, when the value of one reactive object changes, the value of the other reactive object will be updated.
-
-In this library, every property that constitutes an NPC is a reactive object, this allows you to listen to every change made to the NPC and edit it in real time.
-This also allows the library to update NPCs in real time when a property changes.
 
 ### NPC Holders
 
@@ -84,7 +73,7 @@ class MyNpcSpawner {
         Npc npc = this.npcHolder.createNpc(
                 NpcConfig.create(location, skin)
                         .setGlobal(true) // Display the NPC to all players
-                        .setRenderDistance(64) // Override the holder's configuration render distance
+                        .setRenderDistance(64) // The NPC can be seen from 64 blocks away
         );
         // From now, every player will see the NPC
         npc.getClickedListeners().add(event -> {
