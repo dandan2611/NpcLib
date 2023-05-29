@@ -3,6 +3,7 @@ package fr.codinbox.npclib.api.npc;
 import com.google.common.collect.ImmutableMap;
 import fr.codinbox.npclib.api.npc.animation.AnimationType;
 import fr.codinbox.npclib.api.npc.animation.NpcAnimation;
+import fr.codinbox.npclib.api.npc.equipment.NpcEquipment;
 import fr.codinbox.npclib.api.npc.event.NpcClickedEvent;
 import fr.codinbox.npclib.api.npc.event.NpcClickedListener;
 import fr.codinbox.npclib.api.npc.holder.NpcHolder;
@@ -192,5 +193,12 @@ public interface Npc {
      * @param animation the animation
      */
     void playAnimation(@NotNull NpcAnimation animation);
+
+    /**
+     * Get the NPC equipment.
+     *
+     * @return the NPC equipment
+     */
+    @NotNull NpcEquipment getEquipment();
 
 }
