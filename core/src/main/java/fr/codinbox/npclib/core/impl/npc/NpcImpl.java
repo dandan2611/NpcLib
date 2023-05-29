@@ -39,7 +39,7 @@ public class NpcImpl implements Npc {
                    UUID uuid,
                    NpcConfig config) {
         this.holder = holder;
-        this.renderLogic = new WorldDistanceRenderLogic(); // TODO: Add to config
+        this.renderLogic = new WorldDistanceRenderLogic();
         this.location = config.getLocation().clone();
         this.skin = config.getSkin();
         this.entityId = entityId;
