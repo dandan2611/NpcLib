@@ -4,11 +4,9 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketContainer;
-import com.comphenix.protocol.wrappers.EnumWrappers;
-import com.comphenix.protocol.wrappers.PlayerInfoData;
-import com.comphenix.protocol.wrappers.WrappedGameProfile;
-import com.comphenix.protocol.wrappers.WrappedSignedProperty;
+import com.comphenix.protocol.wrappers.*;
 import fr.codinbox.npclib.api.npc.Npc;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -59,6 +57,51 @@ public interface NpcPacket {
         packet.getBytes().write(1, (byte) (location.getPitch() * 256.0F / 360.0F));
         protocolManager.sendServerPacket(player, packet);
     };
+
+    NpcPacket PLAYER_DESPAWN = (protocolManager, player, npc) -> {
+        var packet = new PacketContainer(PacketType.Play.Server.ENTITY_DESTROY);
+        packet.getModifier().write(0, new IntArrayList(new int[]{npc.getEntityId()}));
+        protocolManager.sendServerPacket(player, packet);
+    };
+
+    NpcPacket HEAD_ROTATION = (protocolManager, player, npc) -> {
+        var packet = new PacketContainer(PacketType.Play.Server.ENTITY_HEAD_ROTATION);
+        var location = npc.getLocation();
+
+        packet.getIntegers().write(0, npc.getEntityId());
+        packet.getBytes().write(0, (byte) (location.getYaw() * 256.0F / 360.0F));
+        protocolManager.sendServerPacket(player, packet);
+    };
+
+    NpcPacket ENTIY_METADATA = (protocolManager, player, npc) -> {
+        var packet = new PacketContainer(PacketType.Play.Server.ENTITY_METADATA);
+        // Display all skin parts
+        byte finalByte = 0;
+        for (var i = 0; i < 8; i++)
+            finalByte |= 1 << i;
+        packet.getModifier().writeDefaults();
+        packet.getIntegers().write(0, npc.getEntityId());
+        var watcher = new WrappedDataWatcher();
+        watcher.setObject(new WrappedDataWatcher.WrappedDataWatcherObject(17, WrappedDataWatcher.Registry.get(Byte.class)), finalByte);
+        packet.getWatchableCollectionModifier().write(0, watcher.getWatchableObjects());
+        protocolManager.sendServerPacket(player, packet);
+    };
+
+    /*
+    @Override
+    public boolean createEntityAnimationPacket(@NotNull Npc npc,
+                                               @NotNull AnimationType animationType,
+                                               @Nullable Consumer<PacketContainer> preprocessor,
+                                               @NotNull Player player) {
+        var packet = new PacketContainer(PacketType.Play.Server.ANIMATION);
+        packet.getIntegers().write(0, npc.getEntityId());
+        packet.getIntegers().write(1, animationType.getId());
+        if (preprocessor != null)
+            preprocessor.accept(packet);
+        ProtocolLibrary.getProtocolManager().sendServerPacket(player, packet);
+        return true;
+    }
+     */
 
     void send(@NotNull ProtocolManager protocolManager, @NotNull Player player, @NotNull Npc npc);
 
