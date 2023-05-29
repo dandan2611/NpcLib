@@ -53,7 +53,7 @@ public class NpcImpl implements Npc {
         this.clickedListeners = new HashSet<>();
         this.renderDistance = config.getRenderDistance();
         this.name = config.getName();
-        this.equipment = new NpcEquipmentImpl();
+        this.equipment = new NpcEquipmentImpl(this);
     }
 
     @Override
