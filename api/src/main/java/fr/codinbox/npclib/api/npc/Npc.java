@@ -150,7 +150,7 @@ public interface Npc {
             }
         } else {
             if (player == null) // Player is not online, set the rendered property to false
-                viewer.setRendered(false, false);
+                viewer.setRendered(false);
             // Viewer exists in the cache
             // Just call the viewer render logic
             viewer.render();
