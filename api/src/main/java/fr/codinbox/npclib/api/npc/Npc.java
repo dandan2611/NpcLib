@@ -1,5 +1,6 @@
 package fr.codinbox.npclib.api.npc;
 
+import com.google.common.collect.ImmutableMap;
 import fr.codinbox.npclib.api.npc.animation.AnimationType;
 import fr.codinbox.npclib.api.npc.animation.NpcAnimation;
 import fr.codinbox.npclib.api.npc.event.NpcClickedEvent;
@@ -57,7 +58,7 @@ public interface Npc {
     @NotNull
     UUID getUUID();
 
-    @NotNull Map<UUID, NpcViewer> getViewers();
+    @NotNull ImmutableMap<UUID, NpcViewer> getViewers();
 
     boolean isGlobal();
 

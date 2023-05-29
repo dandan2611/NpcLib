@@ -1,13 +1,10 @@
 package fr.codinbox.npclib.core.impl.npc.viewer;
 
+import com.comphenix.protocol.ProtocolLibrary;
 import fr.codinbox.npclib.api.npc.Npc;
 import fr.codinbox.npclib.api.npc.animation.AnimationType;
-import fr.codinbox.npclib.api.npc.viewer.NpcRenderLogic;
 import fr.codinbox.npclib.api.npc.viewer.NpcViewer;
-import fr.codinbox.npclib.api.packet.PacketStation;
-import fr.codinbox.npclib.api.reactive.Reactive;
-import fr.codinbox.npclib.core.impl.npc.viewer.render.WorldDistanceRenderLogic;
-import fr.codinbox.npclib.core.impl.reactive.ReactiveImpl;
+import fr.codinbox.npclib.core.impl.packet.NpcPacket;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -21,16 +18,12 @@ public class NpcViewerImpl implements NpcViewer {
 
     private final UUID uuid;
 
-    private final Reactive<Boolean> rendered;
+    private boolean rendered;
 
-    private final PacketStation<?> packetStation;
-
-    public NpcViewerImpl(Npc npc, UUID uuid, PacketStation<?> packetStation) {
+    public NpcViewerImpl(Npc npc, UUID uuid) {
         this.npc = npc;
         this.uuid = uuid;
-        this.packetStation = packetStation;
-        this.rendered = new ReactiveImpl<>(false);
-        this.rendered.addListener(this::renderInternal);
+        this.rendered = false;
     }
 
     @Override
@@ -49,30 +42,37 @@ public class NpcViewerImpl implements NpcViewer {
     }
 
     @Override
-    public @NotNull Reactive<Boolean> getRendered() {
+    public boolean isRendered() {
         return this.rendered;
     }
 
-    private void renderInternal(Reactive<Boolean> r, Boolean p, Boolean n) {
-        if (p == n)
+    @Override
+    public void setRendered(boolean rendered) {
+        this.updateRender(rendered);
+    }
+
+    private void updateRender(boolean rendered) {
+        var wasRendered = this.rendered;
+        if (wasRendered == rendered)
             return;
         var player = player();
         if (player == null) {
             // Player is not online
-            this.rendered.set(false, false);
+            this.rendered = false;
             return;
         }
-        if (n) {
+        if (rendered) {
             // The NPC should be rendered
-            this.packetStation.createPlayerInfoPacket(this.npc, null, player);
-            this.packetStation.createPlayerSpawnPacket(this.npc, null, player);
+            NpcPacket.PLAYER_INFO_ADD.send(ProtocolLibrary.getProtocolManager(), player, this.npc);
+            NpcPacket.PLAYER_SPAWN.send(ProtocolLibrary.getProtocolManager(), player, this.npc);
             //this.packetStation.createEntityMetadataPacket(this.npc, null, player);
-            this.packetStation.createEntityHeadRotationPacket(this.npc, null, player);
+            NpcPacket.HEAD_ROTATION.send(ProtocolLibrary.getProtocolManager(), player, this.npc);
         } else {
             // The NPC should be destroyed
-            this.packetStation.createPlayerDespawnPacket(this.npc, null, player);
-            this.packetStation.createPlayerInfoRemovePacket(this.npc, null, player);
+            NpcPacket.PLAYER_DESPAWN.send(ProtocolLibrary.getProtocolManager(), player, this.npc);
+            NpcPacket.PLAYER_INFO_REMOVE.send(ProtocolLibrary.getProtocolManager(), player, this.npc);
         }
+        this.rendered = rendered;
     }
 
     @Override
@@ -80,25 +80,25 @@ public class NpcViewerImpl implements NpcViewer {
         var player = player();
         if (player == null) {
             // Player is not online
-            this.rendered.set(false, false);
+            this.rendered = false;
             return;
         }
 
-        if (!this.npc.getGlobalReactive().get()) {
-            if (this.rendered.get() && !this.npc.hasViewer(this.uuid)) {
-                this.rendered.set(false);
+        if (!this.npc.isGlobal()) {
+            if (this.rendered && !this.npc.hasViewer(this.uuid)) {
+                this.updateRender(false);
                 return;
             }
         }
 
        if (!this.npc.getRenderLogic().shouldBeRendered(this.npc, player, this)) {
             // The NPC should not be rendered
-            this.rendered.set(false);
+            this.updateRender(false);
             return;
        }
 
         // The player is close enough to the NPC
-        this.rendered.set(true);
+        this.updateRender(true);
     }
 
     @Override
@@ -108,7 +108,8 @@ public class NpcViewerImpl implements NpcViewer {
             // Player is not online
             return;
         }
-        this.packetStation.createEntityAnimationPacket(this.npc, animationType, null, player);
+        //this.packetStation.createEntityAnimationPacket(this.npc, animationType, null, player);
+        // TODO: Fix animations
     }
 
 }
