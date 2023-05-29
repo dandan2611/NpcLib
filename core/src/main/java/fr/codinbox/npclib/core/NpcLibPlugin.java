@@ -13,8 +13,6 @@ public class NpcLibPlugin extends JavaPlugin {
 
     private NpcLibImpl npcLib;
 
-    private PacketStationImpl packetStation;
-
     private final ConcurrentHashMap<UUID, Long> interactions = new ConcurrentHashMap<>();
 
     @Override
@@ -22,7 +20,6 @@ public class NpcLibPlugin extends JavaPlugin {
         getLogger().info("Enabling plugin");
         INSTANCE = this;
         this.npcLib = new NpcLibImpl();
-        this.packetStation = new PacketStationImpl();
         NpcLib.setApi(npcLib);
         getLogger().info("Plugin enabled");
     }
@@ -38,10 +35,6 @@ public class NpcLibPlugin extends JavaPlugin {
 
     public static NpcLibImpl impl() {
         return INSTANCE.npcLib;
-    }
-
-    public static PacketStationImpl station() {
-        return INSTANCE.packetStation;
     }
 
     public NpcLibImpl getNpcLib() {
