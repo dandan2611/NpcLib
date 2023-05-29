@@ -1,5 +1,6 @@
 package fr.codinbox.npclib.core.impl.npc.equipment;
 
+import fr.codinbox.npclib.api.npc.Npc;
 import fr.codinbox.npclib.api.npc.equipment.NpcEquipment;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -7,12 +8,18 @@ import org.jetbrains.annotations.Nullable;
 
 public class NpcEquipmentImpl implements NpcEquipment {
 
+    private final @NotNull Npc npc;
+
     private @Nullable ItemStack helmet;
     private @Nullable ItemStack chestplate;
     private @Nullable ItemStack leggings;
     private @Nullable ItemStack boots;
     private @Nullable ItemStack mainHand;
     private @Nullable ItemStack offHand;
+
+    public NpcEquipmentImpl(@NotNull Npc npc) {
+        this.npc = npc;
+    }
 
     @Override
     public @Nullable ItemStack getHelmet() {
