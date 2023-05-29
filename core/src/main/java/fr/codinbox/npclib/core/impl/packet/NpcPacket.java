@@ -86,22 +86,6 @@ public interface NpcPacket {
         protocolManager.sendServerPacket(player, packet);
     };
 
-    /*
-    @Override
-    public boolean createEntityAnimationPacket(@NotNull Npc npc,
-                                               @NotNull AnimationType animationType,
-                                               @Nullable Consumer<PacketContainer> preprocessor,
-                                               @NotNull Player player) {
-        var packet = new PacketContainer(PacketType.Play.Server.ANIMATION);
-        packet.getIntegers().write(0, npc.getEntityId());
-        packet.getIntegers().write(1, animationType.getId());
-        if (preprocessor != null)
-            preprocessor.accept(packet);
-        ProtocolLibrary.getProtocolManager().sendServerPacket(player, packet);
-        return true;
-    }
-     */
-
     void send(@NotNull ProtocolManager protocolManager, @NotNull Player player, @NotNull Npc npc);
 
 }

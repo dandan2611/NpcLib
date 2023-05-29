@@ -1,6 +1,8 @@
 package fr.codinbox.npclib.core.impl.npc.viewer;
 
+import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.events.PacketContainer;
 import fr.codinbox.npclib.api.npc.Npc;
 import fr.codinbox.npclib.api.npc.animation.AnimationType;
 import fr.codinbox.npclib.api.npc.viewer.NpcViewer;
@@ -108,8 +110,12 @@ public class NpcViewerImpl implements NpcViewer {
             // Player is not online
             return;
         }
-        //this.packetStation.createEntityAnimationPacket(this.npc, animationType, null, player);
-        // TODO: Fix animations
+
+        var protocolManager = ProtocolLibrary.getProtocolManager();
+        var packet = new PacketContainer(PacketType.Play.Server.ANIMATION);
+        packet.getIntegers().write(0, npc.getEntityId());
+        packet.getIntegers().write(1, animationType.getId());
+        protocolManager.sendServerPacket(player, packet);
     }
 
 }
