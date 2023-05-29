@@ -93,6 +93,7 @@ public class NpcImpl implements Npc {
 
     @Override
     public void callClickedListeners(@NotNull NpcClickedEvent event) {
+        // TODO: This is not thread safe (ConcurrentModificationException)
         this.clickedListeners.forEach(listener -> listener.onNpcClicked(event));
     }
 
