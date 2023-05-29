@@ -2,6 +2,7 @@ package fr.codinbox.npclib.api.npc.viewer;
 
 import fr.codinbox.npclib.api.npc.Npc;
 import fr.codinbox.npclib.api.npc.animation.AnimationType;
+import fr.codinbox.npclib.api.npc.equipment.NpcEquipment;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -23,5 +24,7 @@ public interface NpcViewer {
     void setRendered(boolean rendered);
 
     void playAnimation(@NotNull AnimationType animationType);
+
+    void updateEquipment(@NotNull NpcEquipment equipment);
 
 }
