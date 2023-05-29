@@ -104,7 +104,7 @@ public class NpcViewerImpl implements NpcViewer {
     @Override
     public void playAnimation(@NotNull AnimationType animationType) {
         var player = player();
-        if (player == null) {
+        if (player == null || !this.rendered) {
             // Player is not online
             return;
         }

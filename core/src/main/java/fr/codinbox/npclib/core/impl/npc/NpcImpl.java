@@ -11,16 +11,9 @@ import fr.codinbox.npclib.api.npc.holder.NpcHolder;
 import fr.codinbox.npclib.api.npc.skin.Skin;
 import fr.codinbox.npclib.api.npc.viewer.NpcRenderLogic;
 import fr.codinbox.npclib.api.npc.viewer.NpcViewer;
-import fr.codinbox.npclib.api.reactive.Reactive;
-import fr.codinbox.npclib.api.reactive.ReactiveList;
-import fr.codinbox.npclib.api.reactive.ReactiveMap;
-import fr.codinbox.npclib.core.NpcLibPlugin;
 import fr.codinbox.npclib.core.impl.npc.animation.NpcAnimationImpl;
 import fr.codinbox.npclib.core.impl.npc.viewer.NpcViewerImpl;
 import fr.codinbox.npclib.core.impl.npc.viewer.render.WorldDistanceRenderLogic;
-import fr.codinbox.npclib.core.impl.reactive.ReactiveImpl;
-import fr.codinbox.npclib.core.impl.reactive.ReactiveListImpl;
-import fr.codinbox.npclib.core.impl.reactive.ReactiveMapImpl;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
@@ -136,7 +129,7 @@ public class NpcImpl implements Npc {
 
         if (viewer == null)
             return;
-        viewer.getRendered().set(false); // Delete the rendered NPC for the player
+        viewer.setRendered(false); // Delete the rendered NPC for the player
         this.viewers.remove(uuid);
     }
 
@@ -149,8 +142,7 @@ public class NpcImpl implements Npc {
     public void playAnimation(@NotNull NpcAnimation animation) {
         var animationViewers = animation.getViewers();
 
-        animationViewers.stream()
-                .filter(this::isRenderedFor)
+        animationViewers
                 .forEach(v -> Objects.requireNonNull(this.getViewer(v)).playAnimation(animation.getAnimationType()));
     }
 
