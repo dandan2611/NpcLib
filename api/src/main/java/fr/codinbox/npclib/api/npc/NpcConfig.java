@@ -61,7 +61,7 @@ public final class NpcConfig {
         return global;
     }
 
-    public @Nullable Integer getRenderDistance() {
+    public @NotNull Integer getRenderDistance() {
         return renderDistance;
     }
 
