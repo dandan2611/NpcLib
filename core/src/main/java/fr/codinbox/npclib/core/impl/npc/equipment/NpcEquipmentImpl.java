@@ -53,38 +53,38 @@ public class NpcEquipmentImpl implements NpcEquipment {
 
     @Override
     public void setHelmet(@Nullable ItemStack helmet) {
-        if (helmet == null) {
+        if (helmet == null)
             this.helmet = null;
-            return;
-        }
-        this.helmet = helmet.clone();
+        else
+            this.helmet = helmet.clone();
+        this.npc.updateEquipment();
     }
 
     @Override
     public void setChestplate(@Nullable ItemStack chestplate) {
-        if (chestplate == null) {
+        if (chestplate == null)
             this.chestplate = null;
-            return;
-        }
-        this.chestplate = chestplate.clone();
+        else
+            this.chestplate = chestplate.clone();
+        this.npc.updateEquipment();
     }
 
     @Override
     public void setLeggings(@Nullable ItemStack leggings) {
-        if (leggings == null) {
+        if (leggings == null)
             this.leggings = null;
-            return;
-        }
-        this.leggings = leggings.clone();
+        else
+            this.leggings = leggings.clone();
+        this.npc.updateEquipment();
     }
 
     @Override
     public void setBoots(@Nullable ItemStack boots) {
-        if (boots == null) {
+        if (boots == null)
             this.boots = null;
-            return;
-        }
-        this.boots = boots.clone();
+        else
+            this.boots = boots.clone();
+        this.npc.updateEquipment();
     }
 
     @Override
@@ -114,6 +114,7 @@ public class NpcEquipmentImpl implements NpcEquipment {
         this.chestplate = contents[1];
         this.leggings = contents[2];
         this.boots = contents[3];
+        this.npc.updateEquipment();
     }
 
 }
