@@ -136,4 +136,37 @@ public interface NpcEquipment {
      */
     void setArmorContents(@NotNull ItemStack[] contents);
 
+    /**
+     * Set the item in the hand of the NPC.
+     * <br>
+     * If the item is a null value, the hand will be cleared.
+     *
+     * @param hand the hand to set the item in
+     * @param item the item to set
+     */
+    default void setItemInHand(@NotNull Hand hand, @Nullable ItemStack item) {
+        switch (hand) {
+            case MAIN_HAND -> setMainHand(item);
+            case OFF_HAND -> setOffHand(item);
+        }
+    }
+
+    /**
+     * The hand of the NPC.
+     * <br>
+     * A hand can be either the main hand or the offhand and can hold (or not) an item.
+     */
+    enum Hand {
+
+        /**
+         * The main hand of the NPC (the right hand).
+         */
+        MAIN_HAND,
+
+        /**
+         * The offhand of the NPC (the left hand).
+         */
+        OFF_HAND
+    }
+
 }
