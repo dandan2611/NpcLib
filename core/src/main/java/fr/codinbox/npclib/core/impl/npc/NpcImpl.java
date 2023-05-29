@@ -5,6 +5,7 @@ import fr.codinbox.npclib.api.npc.Npc;
 import fr.codinbox.npclib.api.npc.NpcConfig;
 import fr.codinbox.npclib.api.npc.animation.AnimationType;
 import fr.codinbox.npclib.api.npc.animation.NpcAnimation;
+import fr.codinbox.npclib.api.npc.equipment.NpcEquipment;
 import fr.codinbox.npclib.api.npc.event.NpcClickedEvent;
 import fr.codinbox.npclib.api.npc.event.NpcClickedListener;
 import fr.codinbox.npclib.api.npc.holder.NpcHolder;
@@ -12,6 +13,7 @@ import fr.codinbox.npclib.api.npc.skin.Skin;
 import fr.codinbox.npclib.api.npc.viewer.NpcRenderLogic;
 import fr.codinbox.npclib.api.npc.viewer.NpcViewer;
 import fr.codinbox.npclib.core.impl.npc.animation.NpcAnimationImpl;
+import fr.codinbox.npclib.core.impl.npc.equipment.NpcEquipmentImpl;
 import fr.codinbox.npclib.core.impl.npc.viewer.NpcViewerImpl;
 import fr.codinbox.npclib.core.impl.npc.viewer.render.WorldDistanceRenderLogic;
 import org.bukkit.Location;
@@ -34,6 +36,8 @@ public class NpcImpl implements Npc {
     private final String name;
     private final NpcRenderLogic renderLogic;
 
+    private final NpcEquipment equipment;
+
     public NpcImpl(NpcHolder holder,
                    int entityId,
                    UUID uuid,
@@ -49,6 +53,7 @@ public class NpcImpl implements Npc {
         this.clickedListeners = new HashSet<>();
         this.renderDistance = config.getRenderDistance();
         this.name = config.getName();
+        this.equipment = new NpcEquipmentImpl();
     }
 
     @Override
@@ -143,6 +148,11 @@ public class NpcImpl implements Npc {
 
         animationViewers
                 .forEach(v -> Objects.requireNonNull(this.getViewer(v)).playAnimation(animation.getAnimationType()));
+    }
+
+    @Override
+    public @NotNull NpcEquipment getEquipment() {
+        return this.equipment;
     }
 
     @Override
