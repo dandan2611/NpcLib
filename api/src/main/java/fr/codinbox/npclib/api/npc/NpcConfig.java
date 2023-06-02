@@ -4,6 +4,7 @@ import fr.codinbox.npclib.api.npc.skin.Skin;
 import fr.codinbox.npclib.api.npc.viewer.NpcRenderLogic;
 import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public final class NpcConfig {
 
@@ -16,8 +17,7 @@ public final class NpcConfig {
     /**
      * The NPC skin.
      */
-    @NotNull
-    private final Skin skin;
+    private final @Nullable Skin skin;
 
     private boolean global = true;
 
@@ -25,12 +25,12 @@ public final class NpcConfig {
 
     private String name = "§7";
 
-    private NpcConfig(@NotNull Location location, @NotNull Skin skin) {
+    private NpcConfig(@NotNull Location location, @Nullable Skin skin) {
         this.location = location;
         this.skin = skin;
     }
 
-    public static NpcConfig create(@NotNull Location location, @NotNull Skin skin) {
+    public static NpcConfig create(@NotNull Location location, @Nullable Skin skin) {
         return new NpcConfig(location, skin);
     }
 
@@ -53,7 +53,7 @@ public final class NpcConfig {
         return location;
     }
 
-    public @NotNull Skin getSkin() {
+    public @Nullable Skin getSkin() {
         return skin;
     }
 
