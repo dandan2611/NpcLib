@@ -1,11 +1,14 @@
 package fr.codinbox.npclib.api.npc.skin;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 public class ValueSignatureSkin implements Skin {
 
-    private final String value;
-    private final String signature;
+    private final @NotNull String value;
+    private final @Nullable String signature;
 
-    protected ValueSignatureSkin(String value, String signature) {
+    protected ValueSignatureSkin(@NotNull String value, @Nullable String signature) {
         this.value = value;
         this.signature = signature;
     }
