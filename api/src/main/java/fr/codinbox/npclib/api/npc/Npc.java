@@ -39,7 +39,7 @@ public interface Npc {
         return this.getLocation().getWorld();
     }
 
-    @NotNull Skin getSkin();
+    @Nullable Skin getSkin();
 
     /**
      * Get the NPC entity id.
