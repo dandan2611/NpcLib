@@ -18,6 +18,7 @@ import fr.codinbox.npclib.core.impl.npc.viewer.NpcViewerImpl;
 import fr.codinbox.npclib.core.impl.npc.viewer.render.WorldDistanceRenderLogic;
 import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 
 import java.util.*;
@@ -67,7 +68,7 @@ public class NpcImpl implements Npc {
     }
 
     @Override
-    public @NotNull Skin getSkin() {
+    public @Nullable Skin getSkin() {
         return this.skin;
     }
 
