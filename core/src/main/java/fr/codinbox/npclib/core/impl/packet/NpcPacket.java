@@ -17,10 +17,12 @@ public interface NpcPacket {
     NpcPacket PLAYER_INFO_ADD = (protocolManager, player, npc) -> {
         var profile = new WrappedGameProfile(npc.getUUID(), npc.getName());
         profile.getProperties().clear();
-        profile.getProperties().put("textures",
-                new WrappedSignedProperty("textures",
-                        npc.getSkin().getValue(),
-                        npc.getSkin().getSignature()));
+        if (npc.getSkin() != null) {
+            profile.getProperties().put("textures",
+                    new WrappedSignedProperty("textures",
+                            npc.getSkin().getValue(),
+                            npc.getSkin().getSignature()));
+        }
 
         var packet = new PacketContainer(PacketType.Play.Server.PLAYER_INFO);
         packet.getPlayerInfoActions().write(0,
