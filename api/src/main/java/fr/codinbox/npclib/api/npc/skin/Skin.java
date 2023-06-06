@@ -3,6 +3,9 @@ package fr.codinbox.npclib.api.npc.skin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Represents a NPC skin.
+ */
 public interface Skin {
 
     /**
