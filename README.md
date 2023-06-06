@@ -2,7 +2,7 @@
 
 ![](https://git.codinbox.fr/codinbox/npclib/badges/master/pipeline.svg)
 ![](https://img.shields.io/badge/Supported%20versions-1.19.3%2B-9cf)
-[![Release - 1.19.3](https://img.shields.io/badge/Release-1.19.3-2ea44f)](https://git.codinbox.fr/api/v4/projects/29/jobs/artifacts/master/raw/core/build/libs/npclib-2.3.0-all.jar?job=deploy)
+[![Release - 1.19.3](https://img.shields.io/badge/Release-1.19.3-2ea44f)](https://git.codinbox.fr/api/v4/projects/29/jobs/artifacts/master/raw/core/build/libs/npclib-2.3.1-all.jar?job=deploy)
 
 **The [GitHub repository](https://github.com/dandan2611/NpcLib) associated with this project is a mirror of the official [GitLab repository](https://git.codinbox.fr/codinbox/npclib).**
 
@@ -23,7 +23,7 @@ It is designed to be easy to use and to be able to be used in any Bukkit plugin.
 ## Installation
 
 1. Install latest version of [ProtocolLib](https://github.com/dmulloy2/ProtocolLib) on your server.
-2. Download the latest [release](https://git.codinbox.fr/api/v4/projects/29/jobs/artifacts/master/raw/core/build/libs/npclib-2.3.0-all.jar?job=deploy) and put it in your server `plugins` folder.
+2. Download the latest [release](https://git.codinbox.fr/api/v4/projects/29/jobs/artifacts/master/raw/core/build/libs/npclib-2.3.1-all.jar?job=deploy) and put it in your server `plugins` folder.
 3. Import the NpcLib API in your project using [Maven](https://maven.apache.org/) or [Gradle](https://gradle.org/).
 4. Put the `depends: [NpcLib]` in your plugin.yml.
 
@@ -37,7 +37,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly("fr.codinbox.npclib:api:2.3.0")
+    compileOnly("fr.codinbox.npclib:api:2.3.1")
 }
 ```
 
