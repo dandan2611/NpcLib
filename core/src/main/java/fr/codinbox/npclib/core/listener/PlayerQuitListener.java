@@ -5,6 +5,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import java.util.Objects;
+
 public class PlayerQuitListener implements Listener {
 
     private final NpcHolder holder;
@@ -16,9 +18,8 @@ public class PlayerQuitListener implements Listener {
     @EventHandler
     private void onJoin(PlayerQuitEvent event) {
         var player = event.getPlayer();
-        var location = player.getLocation();
 
-        holder.getNpcsInWorld(location.getWorld()).forEach(npc -> holder.updateVisibility(npc, player));
+        holder.getRenderedNpcs(player).forEach(npc -> Objects.requireNonNull(npc.getViewer(player.getUniqueId())).setRendered(false));
     }
 
 }
