@@ -6,17 +6,32 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
+/**
+ * The NpcLib API.
+ */
 public abstract class NpcLib {
 
     private static NpcLib API;
 
-    public static NpcLib api() {
+    /**
+     * Get the NpcLib API.
+     *
+     * @return the NpcLib API
+     */
+    public static @NotNull NpcLib api() {
         if (API == null)
             throw new IllegalStateException("NpcLib is not initialized");
         return API;
     }
 
-    public static void setApi(NpcLib api) {
+    /**
+     * Set the NpcLib API.
+     * <br>
+     * This method should only be called by the NpcLib implementation and not reused after the API is initialized.
+     *
+     * @param api the NpcLib API
+     */
+    public static void setApi(@NotNull NpcLib api) {
         if (API != null)
             throw new IllegalStateException("NpcLib is already initialized");
         API = api;
