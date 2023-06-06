@@ -38,7 +38,7 @@ public final class NpcConfig {
     /**
      * The NPC name (nameplate).
      */
-    private String name = "§7";
+    private String name = "";
 
     /**
      * Creates a new NPC configuration.
