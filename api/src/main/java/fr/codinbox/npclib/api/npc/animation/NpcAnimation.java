@@ -7,8 +7,18 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Set;
 import java.util.UUID;
 
+/**
+ * Represents a NPC animation.
+ * <br>
+ * An animation is a visual effect applied to an entity. It can be seen by all (or some) viewers.
+ */
 public interface NpcAnimation {
 
+    /**
+     * Get the NPC.
+     *
+     * @return the NPC
+     */
     @NotNull Npc getNpc();
 
     /**
