@@ -22,6 +22,13 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+/**
+ * Represents a NPC.
+ * <br>
+ * A NPC is an entity that is not stored in the server as a regular entity. It is only visible to the players that are viewing it.
+ * <br>
+ * A NPC is created by a {@link NpcHolder} and is linked to it.
+ */
 public interface Npc {
 
     /**
@@ -33,12 +40,27 @@ public interface Npc {
     @NotNull
     NpcHolder getHolder();
 
+    /**
+     * Get the NPC location.
+     *
+     * @return the NPC location
+     */
     @NotNull Location getLocation();
 
+    /**
+     * Get the NPC world.
+     *
+     * @return the NPC world
+     */
     @NotNull default World getWorld() {
         return this.getLocation().getWorld();
     }
 
+    /**
+     * Get the NPC skin.
+     *
+     * @return the NPC skin
+     */
     @Nullable Skin getSkin();
 
     /**
@@ -58,8 +80,20 @@ public interface Npc {
     @NotNull
     UUID getUUID();
 
+    /**
+     * Get the NPC viewers.
+     *
+     * @return the NPC viewers
+     */
     @NotNull ImmutableMap<UUID, NpcViewer> getViewers();
 
+    /**
+     * Get if the NPC is global.
+     * <br>
+     * Global NPCs are visible to all players.
+     *
+     * @return if the NPC is global
+     */
     boolean isGlobal();
 
     /**
@@ -76,10 +110,26 @@ public interface Npc {
      */
     void callClickedListeners(@NotNull NpcClickedEvent event);
 
+    /**
+     * Get the render distance from which the NPC is visible.
+     *
+     * @return the render distance
+     */
     @Range(from = 0, to = Integer.MAX_VALUE) int getRenderDistance();
 
+    /**
+     * Get the name (nameplate) of the NPC.
+     *
+     * @return the name of the NPC
+     */
     @NotNull String getName();
 
+    /**
+     * Get if the NPC is rendered (visible) for a player.
+     *
+     * @param uuid the player UUID
+     * @return if the NPC is rendered for the player
+     */
     default boolean isRenderedFor(@NotNull UUID uuid) {
         return this.getViewers().get(uuid) != null;
     }
