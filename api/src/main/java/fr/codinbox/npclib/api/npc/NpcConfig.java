@@ -87,10 +87,12 @@ public final class NpcConfig {
     /**
      * Set the NPC name (nameplate).
      *
-     * @param name the NPC name
+     * @param name the NPC name (should not be blank)
      * @return the NPC configuration
      */
     public @NotNull NpcConfig setName(@NotNull String name) {
+        if (name.isBlank())
+            throw new IllegalArgumentException("The NPC name cannot be blank");
         this.name = name;
         return this;
     }
