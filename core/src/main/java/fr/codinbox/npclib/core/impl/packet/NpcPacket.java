@@ -29,10 +29,11 @@ public interface NpcPacket {
                 Set.of(EnumWrappers.PlayerInfoAction.ADD_PLAYER, EnumWrappers.PlayerInfoAction.UPDATE_LISTED));
         packet.getPlayerInfoDataLists().write(1, Collections.singletonList(
                 new PlayerInfoData(
-                        profile,
+                        npc.getUUID(),
                         0,
+                        false,
                         EnumWrappers.NativeGameMode.CREATIVE,
-                        null,
+                        profile,
                         null
                 )
         ));
