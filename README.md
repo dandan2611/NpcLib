@@ -31,9 +31,7 @@ It is designed to be easy to use and to be able to be used in any Bukkit plugin.
 
 ```kotlin
 repositories {
-    maven(url = "https://git.codinbox.fr/api/v4/projects/29/packages/maven") {
-        name = "npclib"
-    }
+    maven(url = "https://nexus.codinbox.fr/repository/maven-releases/")
 }
 
 dependencies {
