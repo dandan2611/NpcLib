@@ -1,10 +1,7 @@
 # NpcLib
 
-![](https://git.codinbox.fr/codinbox/npclib/badges/master/pipeline.svg)
 ![](https://img.shields.io/badge/Supported%20versions-1.19.3%2B-9cf)
-[![Release - 1.19.3](https://img.shields.io/badge/Release-1.19.3-2ea44f)](https://git.codinbox.fr/api/v4/projects/29/jobs/artifacts/master/raw/core/build/libs/npclib-2.3.1-all.jar?job=deploy)
-
-**The [GitHub repository](https://github.com/dandan2611/NpcLib) associated with this project is a mirror of the official [GitLab repository](https://git.codinbox.fr/codinbox/npclib).**
+![Publish](https://github.com/dandan2611/npclib/actions/workflows/build-publish.yml/badge.svg)
 
 NpcLib is a library for creating NPCs in Minecraft. 
 It is designed to be easy to use and to be able to be used in any Bukkit plugin.
@@ -31,7 +28,7 @@ It is designed to be easy to use and to be able to be used in any Bukkit plugin.
 
 ```kotlin
 repositories {
-    maven(url = "https://nexus.codinbox.fr/repository/maven-releases/")
+    maven(url = "https://nexus.codinbox.fr/repository/maven-public/")
 }
 
 dependencies {
