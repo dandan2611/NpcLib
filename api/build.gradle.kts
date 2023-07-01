@@ -33,11 +33,11 @@ publishing {
         }
     }
     repositories {
-        maven(url = "https://git.codinbox.fr/api/v4/projects/29/packages/maven") {
-            name = "npclib"
-            credentials(HttpHeaderCredentials::class)
-            authentication {
-                create<HttpHeaderAuthentication>("header")
+        maven("https://nexus.codinbox.fr/repository/maven-releases/") {
+            name = "public-releases"
+            credentials {
+                username = System.getenv("MAVEN_USERNAME")
+                password = System.getenv("MAVEN_PASSWORD")
             }
         }
     }
