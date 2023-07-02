@@ -10,6 +10,7 @@ import fr.codinbox.npclib.api.npc.event.NpcClickedEvent;
 import fr.codinbox.npclib.api.npc.event.NpcClickedListener;
 import fr.codinbox.npclib.api.npc.holder.NpcHolder;
 import fr.codinbox.npclib.api.npc.skin.Skin;
+import fr.codinbox.npclib.api.npc.skin.SkinPart;
 import fr.codinbox.npclib.api.npc.viewer.NpcRenderLogic;
 import fr.codinbox.npclib.api.npc.viewer.NpcViewer;
 import fr.codinbox.npclib.core.impl.npc.animation.NpcAnimationImpl;
@@ -36,8 +37,10 @@ public class NpcImpl implements Npc {
     private final int renderDistance;
     private final String name;
     private final NpcRenderLogic renderLogic;
-
     private final NpcEquipment equipment;
+    private boolean lookAt;
+    private double lookAtDistance;
+    private SkinPart skinPart;
 
     public NpcImpl(NpcHolder holder,
                    int entityId,
@@ -55,6 +58,9 @@ public class NpcImpl implements Npc {
         this.renderDistance = config.getRenderDistance();
         this.name = config.getName();
         this.equipment = new NpcEquipmentImpl(this);
+        this.lookAt = config.isLookAtPlayer();
+        this.lookAtDistance = config.getLookAtPlayerRange();
+        this.skinPart = config.getSkinPart();
     }
 
     @Override
@@ -114,8 +120,12 @@ public class NpcImpl implements Npc {
     }
 
     private void update() {
-        this.viewers.values()
-                .forEach(NpcViewer::render);
+        this.viewers.values().forEach(viewer -> {
+            if (viewer.isRendered()) {
+                viewer.setRendered(false);
+                viewer.setRendered(true);
+            }
+        });
     }
 
     @Override
@@ -154,6 +164,34 @@ public class NpcImpl implements Npc {
     @Override
     public @NotNull NpcEquipment getEquipment() {
         return this.equipment;
+    }
+
+    @Override
+    public boolean isLookingAtPlayer() {
+        return this.lookAt;
+    }
+
+    @Override
+    public void setLookingAtPlayer(boolean lookingAtPlayer) {
+        this.lookAt = lookingAtPlayer;
+    }
+
+    @Override
+    public double getLookingAtPlayerRange() {
+        return this.lookAtDistance;
+    }
+
+    @Override
+    public void setLookingAtPlayerRange(double lookingAtPlayerRange) {
+        this.lookAtDistance = lookingAtPlayerRange;
+    }
+
+    public @NotNull SkinPart getDisplayedSkinParts() {
+        return skinPart;
+    }
+
+    public void setSkinPart(SkinPart skinPart) {
+        this.skinPart = skinPart;
     }
 
     @Override

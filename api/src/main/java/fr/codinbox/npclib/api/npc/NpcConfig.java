@@ -1,6 +1,8 @@
 package fr.codinbox.npclib.api.npc;
 
+import com.destroystokyo.paper.SkinParts;
 import fr.codinbox.npclib.api.npc.skin.Skin;
+import fr.codinbox.npclib.api.npc.skin.SkinPart;
 import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -39,6 +41,21 @@ public final class NpcConfig {
      * The NPC name (nameplate).
      */
     private String name = "";
+
+    /**
+     * Whether the NPC should look at the player or not.
+     */
+    private boolean lookAtPlayer = false;
+
+    /**
+     * The NPC look at player range.
+     */
+    private double lookAtPlayerRange = 32;
+
+    /**
+     * The NPC skin parts.
+     */
+    private SkinPart skinPart = SkinPart.all();
 
     /**
      * Creates a new NPC configuration.
@@ -98,6 +115,39 @@ public final class NpcConfig {
     }
 
     /**
+     * Set whether the NPC should look at the player or not.
+     *
+     * @param lookAtPlayer whether the NPC should look at the player or not
+     * @return the NPC configuration
+     */
+    public @NotNull NpcConfig setLookAtPlayer(boolean lookAtPlayer) {
+        this.lookAtPlayer = lookAtPlayer;
+        return this;
+    }
+
+    /**
+     * Set the NPC look at player range.
+     *
+     * @param lookAtPlayerRange the NPC look at player range
+     * @return the NPC configuration
+     */
+    public NpcConfig setLookAtPlayerRange(double lookAtPlayerRange) {
+        this.lookAtPlayerRange = lookAtPlayerRange;
+        return this;
+    }
+
+    /**
+     * Set the NPC skin parts.
+     *
+     * @param skinPart the NPC skin parts
+     * @return the NPC configuration
+     */
+    public @NotNull NpcConfig setSkinPart(SkinPart skinPart) {
+        this.skinPart = skinPart;
+        return this;
+    }
+
+    /**
      * Get the NPC location.
      *
      * @return the NPC location
@@ -140,6 +190,33 @@ public final class NpcConfig {
      */
     public @NotNull String getName() {
         return name;
+    }
+
+    /**
+     * Get whether the NPC should look at the player or not (see {@link NpcConfig#lookAtPlayer}).
+     *
+     * @return whether the NPC should look at the player or not
+     */
+    public boolean isLookAtPlayer() {
+        return lookAtPlayer;
+    }
+
+    /**
+     * Get the NPC look at player range.
+     *
+     * @return the NPC look at player range
+     */
+    public double getLookAtPlayerRange() {
+        return lookAtPlayerRange;
+    }
+
+    /**
+     * Get the NPC skin parts.
+     *
+     * @return the NPC skin parts
+     */
+    public @NotNull SkinPart getSkinPart() {
+        return skinPart;
     }
 
 }

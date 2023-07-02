@@ -9,7 +9,9 @@ import it.unimi.dsi.fastutil.ints.IntArrayList;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 public interface NpcPacket {
@@ -73,19 +75,33 @@ public interface NpcPacket {
         packet.getIntegers().write(0, npc.getEntityId());
         packet.getBytes().write(0, (byte) (location.getYaw() * 256.0F / 360.0F));
         protocolManager.sendServerPacket(player, packet);
+
+        packet = new PacketContainer(PacketType.Play.Server.ENTITY_LOOK);
+        packet.getIntegers().write(0, npc.getEntityId());
+        packet.getBytes().write(0, (byte) (location.getYaw() * 256.0F / 360.0F));
+        packet.getBytes().write(1, (byte) (location.getPitch() * 256.0F / 360.0F));
+        protocolManager.sendServerPacket(player, packet);
     };
 
-    NpcPacket ENTIY_METADATA = (protocolManager, player, npc) -> {
+    NpcPacket ENTITY_METADATA = (protocolManager, player, npc) -> {
         var packet = new PacketContainer(PacketType.Play.Server.ENTITY_METADATA);
-        // Display all skin parts
-        byte finalByte = 0;
-        for (var i = 0; i < 8; i++)
-            finalByte |= 1 << i;
-        packet.getModifier().writeDefaults();
         packet.getIntegers().write(0, npc.getEntityId());
-        var watcher = new WrappedDataWatcher();
-        watcher.setObject(new WrappedDataWatcher.WrappedDataWatcherObject(17, WrappedDataWatcher.Registry.get(Byte.class)), finalByte);
-        packet.getWatchableCollectionModifier().write(0, watcher.getWatchableObjects());
+        final var watcher = new WrappedDataWatcher();
+        final var serializer = WrappedDataWatcher.Registry.get(Byte.class);
+        final var object = new WrappedDataWatcher.WrappedDataWatcherObject(17, serializer);
+        watcher.setObject(object, npc.getDisplayedSkinParts().getValue());
+
+        final List<WrappedDataValue> wrappedDataValueList = new ArrayList<>();
+        watcher.getWatchableObjects().forEach(wrappedDataValue -> {
+            final WrappedDataWatcher.WrappedDataWatcherObject obh = wrappedDataValue.getWatcherObject();
+            wrappedDataValueList.add(new WrappedDataValue(
+                    obh.getIndex(),
+                    obh.getSerializer(),
+                    wrappedDataValue.getRawValue()
+            ));
+        });
+
+        packet.getDataValueCollectionModifier().write(0, wrappedDataValueList);
         protocolManager.sendServerPacket(player, packet);
     };
 
