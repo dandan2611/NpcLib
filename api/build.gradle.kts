@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "fr.codinbox.npclib"
-version = "2.4.0.1"
+version = "2.4.0"
 
 repositories {
     mavenCentral()
