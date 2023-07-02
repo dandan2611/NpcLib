@@ -8,6 +8,7 @@ import fr.codinbox.npclib.api.npc.event.NpcClickedEvent;
 import fr.codinbox.npclib.api.npc.event.NpcClickedListener;
 import fr.codinbox.npclib.api.npc.holder.NpcHolder;
 import fr.codinbox.npclib.api.npc.skin.Skin;
+import fr.codinbox.npclib.api.npc.skin.SkinPart;
 import fr.codinbox.npclib.api.npc.viewer.NpcRenderLogic;
 import fr.codinbox.npclib.api.npc.viewer.NpcViewer;
 import org.bukkit.Bukkit;
@@ -258,5 +259,40 @@ public interface Npc {
         final var equipment = this.getEquipment();
         this.getViewers().values().forEach(npcViewer -> npcViewer.updateEquipment(equipment));
     }
+
+    /**
+     * Check if the NPC should be looking at close players.
+     *
+     * @return if the NPC should be looking at close players
+     */
+    boolean isLookingAtPlayer();
+
+    /**
+     * Set if the NPC should be looking at close players.
+     *
+     * @param lookingAtPlayer if the NPC should be looking at close players
+     */
+    void setLookingAtPlayer(boolean lookingAtPlayer);
+
+    /**
+     * Get the range in which the NPC should be looking at close players.
+     *
+     * @return the range in which the NPC should be looking at close players
+     */
+    double getLookingAtPlayerRange();
+
+    /**
+     * Set the range in which the NPC should be looking at close players.
+     *
+     * @param lookingAtPlayerRange the range in which the NPC should be looking at close players
+     */
+    void setLookingAtPlayerRange(double lookingAtPlayerRange);
+
+    /**
+     * Get the displayed skin parts of the NPC.
+     *
+     * @return the displayed skin parts of the NPC
+     */
+    @NotNull SkinPart getDisplayedSkinParts();
 
 }
