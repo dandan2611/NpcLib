@@ -2,6 +2,9 @@ package fr.codinbox.npclib.api.npc.skin;
 
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Represents the skin parts.
+ */
 public final class SkinPart {
 
     /**
