@@ -209,6 +209,15 @@ public interface Npc {
     }
 
     /**
+     * Perform the check to see if the NPC should be rendered for a player, and if so, render it.
+     *
+     * @param player the player
+     */
+    default void renderFor(@NotNull Player player) {
+        this.renderFor(player.getUniqueId());
+    }
+
+    /**
      * Get the render logic of the NPC.
      * The render logic is the object that is responsible for checking if the NPC should be rendered for a player.
      *
