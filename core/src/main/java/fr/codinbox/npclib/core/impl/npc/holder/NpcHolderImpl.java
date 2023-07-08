@@ -103,8 +103,7 @@ public class NpcHolderImpl implements NpcHolder {
     @Override
     public @NotNull Npc createNpc(@NotNull NpcConfig config) {
         int id = this.generateNpcId();
-        UUID uuid = UUID.randomUUID();
-        var npc = new NpcImpl(this, id, uuid, config);
+        var npc = new NpcImpl(this, id, config);
         this.npcs.put(npc.getEntityId(), npc);
         this.worldNpcs.computeIfAbsent(npc.getWorld(), k -> new HashSet<>()).add(npc);
         // Update npc for players in the same world

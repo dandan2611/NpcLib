@@ -44,14 +44,13 @@ public class NpcImpl implements Npc {
 
     public NpcImpl(NpcHolder holder,
                    int entityId,
-                   UUID uuid,
                    NpcConfig config) {
         this.holder = holder;
         this.renderLogic = new WorldDistanceRenderLogic();
         this.location = config.getLocation().clone();
         this.skin = config.getSkin();
         this.entityId = entityId;
-        this.uuid = uuid;
+        this.uuid = config.getUuid();
         this.global = config.isGlobal();
         this.viewers = new HashMap<>();
         this.clickedListeners = new HashSet<>();
