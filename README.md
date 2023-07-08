@@ -32,7 +32,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly("fr.codinbox.npclib:api:2.5.0")
+    compileOnly("fr.codinbox.npclib:api:2.6.0")
 }
 ```
 
