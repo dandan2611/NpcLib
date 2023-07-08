@@ -7,6 +7,8 @@ import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.UUID;
+
 /**
  * Represents a NPC configuration.
  * <br>
@@ -58,14 +60,33 @@ public final class NpcConfig {
     private SkinPart skinPart = SkinPart.all();
 
     /**
+     * The NPC UUID.
+     */
+    private UUID uuid;
+
+    /**
      * Creates a new NPC configuration.
      *
+     * @param uuid the NPC UUID. If null, a random UUID will be generated
      * @param location the NPC location
-     * @param skin    the NPC skin
+     * @param skin the NPC skin
      */
-    private NpcConfig(@NotNull Location location, @Nullable Skin skin) {
+    private NpcConfig(@Nullable UUID uuid, @NotNull Location location, @Nullable Skin skin) {
         this.location = location;
         this.skin = skin;
+        this.uuid = (uuid != null) ? uuid : UUID.randomUUID();
+    }
+
+    /**
+     * Creates a new NPC configuration.
+     *
+     * @param uuid the NPC UUID. If null, a random UUID will be generated
+     * @param location the NPC location
+     * @param skin the NPC skin
+     * @return the NPC configuration
+     */
+    public static @NotNull NpcConfig create(@Nullable UUID uuid, @NotNull Location location, @Nullable Skin skin) {
+        return new NpcConfig(uuid, location, skin);
     }
 
     /**
@@ -75,8 +96,8 @@ public final class NpcConfig {
      * @param skin the NPC skin
      * @return the NPC configuration
      */
-    public static NpcConfig create(@NotNull Location location, @Nullable Skin skin) {
-        return new NpcConfig(location, skin);
+    public static @NotNull NpcConfig create(@NotNull Location location, @Nullable Skin skin) {
+        return create(UUID.randomUUID(), location, skin);
     }
 
     /**
