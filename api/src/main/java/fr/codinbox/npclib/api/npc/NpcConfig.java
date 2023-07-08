@@ -240,4 +240,13 @@ public final class NpcConfig {
         return skinPart;
     }
 
+    /**
+     * Get the NPC UUID.
+     *
+     * @return the NPC UUID
+     */
+    public @NotNull UUID getUuid() {
+        return uuid;
+    }
+
 }
