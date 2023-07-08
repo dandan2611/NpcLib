@@ -107,6 +107,8 @@ public class NpcHolderImpl implements NpcHolder {
         var npc = new NpcImpl(this, id, uuid, config);
         this.npcs.put(npc.getEntityId(), npc);
         this.worldNpcs.computeIfAbsent(npc.getWorld(), k -> new HashSet<>()).add(npc);
+        // Update npc for players in the same world
+        config.getLocation().getWorld().getPlayers().forEach(npc::renderFor);
         return npc;
     }
 

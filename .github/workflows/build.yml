@@ -1,0 +1,27 @@
+name: Build
+on:
+  push:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'adopt'
+      - name: Build
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: build
+      - name: Upload API artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: API-jars
+          path: api/build/libs/api-*.jar
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: Plugin-jars
+          path: core/build/libs/npclib-*-all.jar
