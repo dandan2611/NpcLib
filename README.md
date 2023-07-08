@@ -1,7 +1,7 @@
 # NpcLib
 
 ![](https://img.shields.io/badge/Supported%20versions-1.19.3%2B-9cf)
-![Publish](https://github.com/dandan2611/npclib/actions/workflows/build-publish.yml/badge.svg)
+![Build](https://github.com/dandan2611/npclib/actions/workflows/build.yml/badge.svg)
 
 NpcLib is a library for creating NPCs in Minecraft. 
 It is designed to be easy to use and to be able to be used in any Bukkit plugin.
