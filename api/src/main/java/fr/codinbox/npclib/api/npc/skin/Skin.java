@@ -1,5 +1,7 @@
 package fr.codinbox.npclib.api.npc.skin;
 
+import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,7 +32,20 @@ public interface Skin {
         return null;
     }
 
-    // TODO: Add a method to create a skin from a player name.
+    /**
+     * Create a skin from a player.
+     *
+     * @param player the player
+     * @return the skin
+     */
+    static @Nullable ValueSignatureSkin fromPlayer(@NotNull OfflinePlayer player) {
+        for (com.destroystokyo.paper.profile.ProfileProperty property : player.getPlayerProfile().getProperties()) {
+            if (property.getName().equals("textures")) {
+                return fromValueAndSignature(property.getValue(), property.getSignature());
+            }
+        }
+        return null;
+    }
     // TODO: Add a method to create a skin from a player UUID.
     // TODO: Add a method to create a skin from a skin URL.
 
