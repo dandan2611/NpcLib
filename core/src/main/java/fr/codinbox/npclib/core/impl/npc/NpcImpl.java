@@ -41,6 +41,7 @@ public class NpcImpl implements Npc {
     private boolean lookAt;
     private double lookAtDistance;
     private SkinPart skinPart;
+    private boolean displayInTablist;
 
     public NpcImpl(NpcHolder holder,
                    int entityId,
@@ -60,6 +61,7 @@ public class NpcImpl implements Npc {
         this.lookAt = config.isLookAtPlayer();
         this.lookAtDistance = config.getLookAtPlayerRange();
         this.skinPart = config.getSkinPart();
+        this.displayInTablist = config.isDisplayInTablist();
     }
 
     @Override
@@ -191,6 +193,10 @@ public class NpcImpl implements Npc {
 
     public void setSkinPart(SkinPart skinPart) {
         this.skinPart = skinPart;
+    }
+
+    public boolean isDisplayInTablist() {
+        return displayInTablist;
     }
 
     @Override

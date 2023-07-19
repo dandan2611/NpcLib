@@ -65,6 +65,11 @@ public final class NpcConfig {
     private UUID uuid;
 
     /**
+     * Whether the NPC should be displayed in the tablist or not.
+     */
+    private boolean displayInTablist = false;
+
+    /**
      * Creates a new NPC configuration.
      *
      * @param uuid the NPC UUID. If null, a random UUID will be generated
@@ -152,8 +157,19 @@ public final class NpcConfig {
      * @param lookAtPlayerRange the NPC look at player range
      * @return the NPC configuration
      */
-    public NpcConfig setLookAtPlayerRange(double lookAtPlayerRange) {
+    public @NotNull NpcConfig setLookAtPlayerRange(double lookAtPlayerRange) {
         this.lookAtPlayerRange = lookAtPlayerRange;
+        return this;
+    }
+
+    /**
+     * Set if the npc should be displayed in the tablist or not.
+     *
+     * @param displayInTablist if the npc should be displayed in the tablist or not
+     * @return the NPC configuration
+     */
+    public @NotNull NpcConfig setDisplayInTablist(boolean displayInTablist) {
+        this.displayInTablist = displayInTablist;
         return this;
     }
 
@@ -247,6 +263,15 @@ public final class NpcConfig {
      */
     public @NotNull UUID getUuid() {
         return uuid;
+    }
+
+    /**
+     * Get if the npc should be displayed in the tablist or not.
+     *
+     * @return if the npc should be displayed in the tablist or not
+     */
+    public boolean isDisplayInTablist() {
+        return displayInTablist;
     }
 
 }

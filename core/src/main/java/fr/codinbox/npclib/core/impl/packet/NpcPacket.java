@@ -33,7 +33,7 @@ public interface NpcPacket {
                 new PlayerInfoData(
                         npc.getUUID(),
                         0,
-                        false,
+                        npc.isDisplayInTablist(),
                         EnumWrappers.NativeGameMode.CREATIVE,
                         profile,
                         null
