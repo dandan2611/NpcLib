@@ -304,4 +304,11 @@ public interface Npc {
      */
     @NotNull SkinPart getDisplayedSkinParts();
 
+    /**
+     * Check if the NPC is displayed in the tablist.
+     *
+     * @return if the NPC is displayed in the tablist
+     */
+    boolean isDisplayInTablist();
+
 }
