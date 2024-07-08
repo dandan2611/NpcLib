@@ -155,4 +155,9 @@ public class NpcHolderImpl implements NpcHolder {
         return npc.getRenderers();
     }
 
+    @Override
+    public @NotNull Plugin getPlugin() {
+        return this.plugin;
+    }
+
 }

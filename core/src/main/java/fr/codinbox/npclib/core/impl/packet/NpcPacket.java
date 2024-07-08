@@ -6,6 +6,7 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.*;
 import fr.codinbox.npclib.api.npc.Npc;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -51,8 +52,9 @@ public interface NpcPacket {
 
     NpcPacket PLAYER_SPAWN = (protocolManager, player, npc) -> {
         var location = npc.getLocation();
-        var packet = new PacketContainer(PacketType.Play.Server.NAMED_ENTITY_SPAWN);
+        var packet = new PacketContainer(PacketType.Play.Server.SPAWN_ENTITY);
         packet.getIntegers().write(0, npc.getEntityId());
+        packet.getEntityTypeModifier().write(0, EntityType.PLAYER);
         packet.getUUIDs().write(0, npc.getUUID());
         packet.getDoubles().write(0 ,location.getX());
         packet.getDoubles().write(1, location.getY());

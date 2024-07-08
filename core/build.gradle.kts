@@ -24,7 +24,7 @@ dependencies {
     implementation(project(":api"))
     implementation("commons-io:commons-io:2.11.0")
     compileOnly("io.papermc.paper:paper-api:1.19.3-R0.1-SNAPSHOT")
-    compileOnly("com.comphenix.protocol:ProtocolLib:5.0.0")
+    compileOnly("com.comphenix.protocol:ProtocolLib:5.1.0")
     testImplementation("org.junit.jupiter:junit-jupiter:5.9.2")
 }
 

@@ -18,6 +18,7 @@ import fr.codinbox.npclib.core.impl.npc.equipment.NpcEquipmentImpl;
 import fr.codinbox.npclib.core.impl.npc.viewer.NpcViewerImpl;
 import fr.codinbox.npclib.core.impl.npc.viewer.render.WorldDistanceRenderLogic;
 import org.bukkit.Location;
+import org.checkerframework.checker.units.qual.N;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
@@ -135,8 +136,10 @@ public class NpcImpl implements Npc {
     }
 
     @Override
-    public void addViewer(@NotNull UUID uuid) {
-        this.viewers.put(uuid, new NpcViewerImpl(this, uuid));
+    public @NotNull NpcViewer addViewer(@NotNull UUID uuid) {
+        final NpcViewer viewer = new NpcViewerImpl(this, uuid);
+        this.viewers.put(uuid, viewer);
+        return viewer;
     }
 
     @Override

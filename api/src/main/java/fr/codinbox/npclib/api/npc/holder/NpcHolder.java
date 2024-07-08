@@ -4,6 +4,7 @@ import fr.codinbox.npclib.api.npc.Npc;
 import fr.codinbox.npclib.api.npc.NpcConfig;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
@@ -86,5 +87,12 @@ public interface NpcHolder {
      * @return the players
      */
     @NotNull Set<@NotNull UUID> getRenderedPlayers(@NotNull Npc npc);
+
+    /**
+     * Get the plugin of the holder.
+     *
+     * @return the plugin
+     */
+    @NotNull Plugin getPlugin();
 
 }

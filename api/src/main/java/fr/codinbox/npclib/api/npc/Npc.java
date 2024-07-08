@@ -197,7 +197,7 @@ public interface Npc {
             if (player.getWorld() != this.getWorld())
                 return; // Player is not in the same world as the NPC
             if (getRenderLogic().shouldBeRendered(this, player, null)) {
-                this.addViewer(uuid);
+                this.addViewer(uuid).render();
             }
         } else {
             if (player == null) // Player is not online, set the rendered property to false
@@ -230,7 +230,7 @@ public interface Npc {
      *
      * @param uuid the viewer UUID
      */
-    void addViewer(@NotNull UUID uuid);
+    @NotNull NpcViewer addViewer(@NotNull UUID uuid);
 
     /**
      * Remove a viewer from the NPC.
