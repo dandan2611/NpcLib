@@ -1,51 +1,59 @@
 package fr.codinbox.npclib.core.impl.packet.listener;
 
-import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.events.PacketAdapter;
-import com.comphenix.protocol.events.PacketEvent;
+import com.github.retrooper.packetevents.event.PacketListener;
+import com.github.retrooper.packetevents.event.PacketReceiveEvent;
+import com.github.retrooper.packetevents.protocol.packettype.PacketType.Play.Client;
+import com.github.retrooper.packetevents.protocol.player.User;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientInteractEntity;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientInteractEntity.InteractAction;
 import fr.codinbox.npclib.api.npc.event.NpcClickedEvent;
 import fr.codinbox.npclib.api.npc.holder.NpcHolder;
+import java.util.HashMap;
+import java.util.UUID;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
-import java.util.UUID;
-
-public class NpcInteractionPacketListener extends PacketAdapter {
+public class NpcInteractionPacketListener implements PacketListener {
 
     private final @NotNull NpcHolder holder;
 
     private final @NotNull HashMap<UUID, Long> interactions = new HashMap<>();
 
     public NpcInteractionPacketListener(@NotNull Plugin plugin, @NotNull NpcHolder holder) {
-        super(plugin, PacketType.Play.Client.USE_ENTITY);
         this.holder = holder;
     }
 
     @Override
-    public void onPacketReceiving(PacketEvent event) {
-        var packet = event.getPacket();
-        var id = packet.getIntegers().read(0);
-        var action = packet.getEnumEntityUseActions().read(0);
-        var player = event.getPlayer();
+    public void onPacketReceive(final @NotNull PacketReceiveEvent event) {
+        final User user = event.getUser();
 
-        if (interactions.containsKey(player.getUniqueId())
-                && System.currentTimeMillis() - interactions.get(player.getUniqueId()) < 100) {
-            //event.setCancelled(true);
+        if (Client.INTERACT_ENTITY != event.getPacketType())
+            return;
+
+        final WrapperPlayClientInteractEntity packet = new WrapperPlayClientInteractEntity(event);
+        final int id = packet.getEntityId();
+        final InteractAction action = packet.getAction();
+
+        if (interactions.containsKey(user.getUUID())
+            && System.currentTimeMillis() - interactions.get(user.getUUID()) < 100) {
+            // event.setCancelled(true);
             return;
         }
-        interactions.put(player.getUniqueId(), System.currentTimeMillis());
+        interactions.put(user.getUUID(), System.currentTimeMillis());
 
-        final NpcClickedEvent.InteractionType interactionType = switch (action.getAction()) {
+        final NpcClickedEvent.InteractionType interactionType = switch (action) {
             case ATTACK -> NpcClickedEvent.InteractionType.ATTACK;
             case INTERACT -> NpcClickedEvent.InteractionType.INTERACT;
             case INTERACT_AT -> NpcClickedEvent.InteractionType.INTERACT_AT;
         };
 
-        holder.getNpcsInWorld(event.getPlayer().getWorld()).stream().filter(npc -> npc.getEntityId() == id).forEach(npc -> {
+        final Player player = event.getPlayer();
+
+        holder.getNpcsInWorld(player.getWorld()).stream().filter(npc -> npc.getEntityId() == id).forEach(npc -> {
             var e = new NpcClickedEvent(npc, player, holder, interactionType);
             npc.callClickedListeners(e);
-            //event.setCancelled(true);
+            event.setCancelled(true);
         });
     }
 

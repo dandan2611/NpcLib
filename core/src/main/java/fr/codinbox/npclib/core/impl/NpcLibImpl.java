@@ -3,12 +3,11 @@ package fr.codinbox.npclib.core.impl;
 import fr.codinbox.npclib.api.NpcLib;
 import fr.codinbox.npclib.api.npc.holder.NpcHolder;
 import fr.codinbox.npclib.core.impl.npc.holder.NpcHolderImpl;
-import org.bukkit.plugin.Plugin;
-import org.jetbrains.annotations.NotNull;
-
 import java.util.HashMap;
 import java.util.Optional;
 import java.util.Set;
+import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.NotNull;
 
 public class NpcLibImpl extends NpcLib {
 

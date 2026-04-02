@@ -1,15 +1,14 @@
 package fr.codinbox.npclib.core.listener;
 
 import fr.codinbox.npclib.api.npc.holder.NpcHolder;
+import java.util.HashMap;
+import java.util.Objects;
+import java.util.UUID;
 import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
-
-import java.util.HashMap;
-import java.util.Objects;
-import java.util.UUID;
 
 public class PlayerMoveListener implements Listener {
 
@@ -42,7 +41,8 @@ public class PlayerMoveListener implements Listener {
         var player = event.getPlayer();
         var location = player.getLocation();
         this.lastLocations.put(player.getUniqueId(), location);
-        holder.getRenderedNpcs(player).forEach(npc -> Objects.requireNonNull(npc.getViewer(player.getUniqueId())).setRendered(false));
+        holder.getRenderedNpcs(player)
+              .forEach(npc -> Objects.requireNonNull(npc.getViewer(player.getUniqueId())).setRendered(false));
         holder.getNpcsInWorld(location.getWorld()).forEach(npc -> holder.updateVisibility(npc, player));
     }
 

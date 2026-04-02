@@ -1,112 +1,117 @@
 package fr.codinbox.npclib.core.impl.packet;
 
-import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.ProtocolManager;
-import com.comphenix.protocol.events.PacketContainer;
-import com.comphenix.protocol.wrappers.*;
+import com.github.retrooper.packetevents.PacketEventsAPI;
+import com.github.retrooper.packetevents.protocol.entity.data.EntityData;
+import com.github.retrooper.packetevents.protocol.entity.data.EntityDataType;
+import com.github.retrooper.packetevents.protocol.entity.data.EntityDataTypes;
+import com.github.retrooper.packetevents.protocol.entity.type.EntityTypes;
+import com.github.retrooper.packetevents.protocol.player.GameMode;
+import com.github.retrooper.packetevents.protocol.player.TextureProperty;
+import com.github.retrooper.packetevents.protocol.player.UserProfile;
+import com.github.retrooper.packetevents.util.Vector3d;
+import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerDestroyEntities;
+import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerEntityHeadLook;
+import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerEntityMetadata;
+import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerEntityRotation;
+import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerPlayerInfoRemove;
+import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerPlayerInfoUpdate;
+import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerPlayerInfoUpdate.Action;
+import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerPlayerInfoUpdate.PlayerInfo;
+import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerSpawnEntity;
 import fr.codinbox.npclib.api.npc.Npc;
-import it.unimi.dsi.fastutil.ints.IntArrayList;
-import org.bukkit.entity.EntityType;
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Optional;
+import net.kyori.adventure.text.Component;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
 
 public interface NpcPacket {
 
     NpcPacket PLAYER_INFO_ADD = (protocolManager, player, npc) -> {
-        var profile = new WrappedGameProfile(npc.getUUID(), npc.getName());
-        profile.getProperties().clear();
+        final List<TextureProperty> properties = new ArrayList<>();
         if (npc.getSkin() != null) {
-            profile.getProperties().put("textures",
-                    new WrappedSignedProperty("textures",
-                            npc.getSkin().getValue(),
-                            npc.getSkin().getSignature()));
+            properties.add(new TextureProperty("textures", npc.getSkin().getValue(), npc.getSkin().getSignature()));
         }
 
-        var packet = new PacketContainer(PacketType.Play.Server.PLAYER_INFO);
-        packet.getPlayerInfoActions().write(0,
-                Set.of(EnumWrappers.PlayerInfoAction.ADD_PLAYER, EnumWrappers.PlayerInfoAction.UPDATE_LISTED));
-        packet.getPlayerInfoDataLists().write(1, Collections.singletonList(
-                new PlayerInfoData(
-                        npc.getUUID(),
-                        0,
-                        npc.isDisplayInTablist(),
-                        EnumWrappers.NativeGameMode.CREATIVE,
-                        profile,
-                        null
-                )
-        ));
-        protocolManager.sendServerPacket(player, packet);
+        final WrapperPlayServerPlayerInfoUpdate packet = new WrapperPlayServerPlayerInfoUpdate(
+            EnumSet.of(Action.ADD_PLAYER, Action.UPDATE_LISTED), List.of(new PlayerInfo(
+            new UserProfile(npc.getUUID(), npc.getName(), properties),
+            false,
+            0,
+            GameMode.CREATIVE,
+            Component.text(npc.getName()),
+            null,
+            0,
+            true
+        ))
+        );
+
+        protocolManager.getPlayerManager().sendPacket(player, packet);
     };
 
     NpcPacket PLAYER_INFO_REMOVE = (protocolManager, player, npc) -> {
-        var packet = new PacketContainer(PacketType.Play.Server.PLAYER_INFO_REMOVE);
-        packet.getUUIDLists()
-                .write(0, Collections.singletonList(npc.getUUID()));
-        protocolManager.sendServerPacket(player, packet);
+        final WrapperPlayServerPlayerInfoRemove packet = new WrapperPlayServerPlayerInfoRemove(List.of(npc.getUUID()));
+
+        protocolManager.getPlayerManager().sendPacket(player, packet);
     };
 
     NpcPacket PLAYER_SPAWN = (protocolManager, player, npc) -> {
-        var location = npc.getLocation();
-        var packet = new PacketContainer(PacketType.Play.Server.SPAWN_ENTITY);
-        packet.getIntegers().write(0, npc.getEntityId());
-        packet.getEntityTypeModifier().write(0, EntityType.PLAYER);
-        packet.getUUIDs().write(0, npc.getUUID());
-        packet.getDoubles().write(0 ,location.getX());
-        packet.getDoubles().write(1, location.getY());
-        packet.getDoubles().write(2, location.getZ());
-        packet.getBytes().write(0, (byte) (location.getYaw() * 256.0F / 360.0F));
-        packet.getBytes().write(1, (byte) (location.getPitch() * 256.0F / 360.0F));
-        protocolManager.sendServerPacket(player, packet);
+        final Location location = npc.getLocation();
+
+        final WrapperPlayServerSpawnEntity packet = new WrapperPlayServerSpawnEntity(
+            npc.getEntityId(),
+            Optional.of(npc.getUUID()),
+            EntityTypes.PLAYER,
+            new Vector3d(location.getX(), location.getY(), location.getZ()),
+            location.getPitch(),
+            location.getYaw(),
+            0.0f,
+            0,
+            Optional.empty()
+        );
+
+        protocolManager.getPlayerManager().sendPacket(player, packet);
     };
 
     NpcPacket PLAYER_DESPAWN = (protocolManager, player, npc) -> {
-        var packet = new PacketContainer(PacketType.Play.Server.ENTITY_DESTROY);
-        packet.getModifier().write(0, new IntArrayList(new int[]{npc.getEntityId()}));
-        protocolManager.sendServerPacket(player, packet);
+        final WrapperPlayServerDestroyEntities packet = new WrapperPlayServerDestroyEntities(npc.getEntityId());
+
+        protocolManager.getPlayerManager().sendPacket(player, packet);
     };
 
     NpcPacket HEAD_ROTATION = (protocolManager, player, npc) -> {
-        var packet = new PacketContainer(PacketType.Play.Server.ENTITY_HEAD_ROTATION);
-        var location = npc.getLocation();
+        final WrapperPlayServerEntityHeadLook packet = new WrapperPlayServerEntityHeadLook(
+            npc.getEntityId(),
+            (byte) (npc.getLocation().getYaw() * 256.0F / 360.0F)
+        );
 
-        packet.getIntegers().write(0, npc.getEntityId());
-        packet.getBytes().write(0, (byte) (location.getYaw() * 256.0F / 360.0F));
-        protocolManager.sendServerPacket(player, packet);
+        protocolManager.getPlayerManager().sendPacket(player, packet);
 
-        packet = new PacketContainer(PacketType.Play.Server.ENTITY_LOOK);
-        packet.getIntegers().write(0, npc.getEntityId());
-        packet.getBytes().write(0, (byte) (location.getYaw() * 256.0F / 360.0F));
-        packet.getBytes().write(1, (byte) (location.getPitch() * 256.0F / 360.0F));
-        protocolManager.sendServerPacket(player, packet);
+        final WrapperPlayServerEntityRotation bodyPacket = new WrapperPlayServerEntityRotation(
+            npc.getEntityId(),
+            (byte) (npc.getLocation().getYaw() * 256.0F / 360.0F),
+            (byte) (npc.getLocation().getPitch() * 256.0F / 360.0F),
+            true
+        );
+
+        protocolManager.getPlayerManager().sendPacket(player, bodyPacket);
     };
 
     NpcPacket ENTITY_METADATA = (protocolManager, player, npc) -> {
-        var packet = new PacketContainer(PacketType.Play.Server.ENTITY_METADATA);
-        packet.getIntegers().write(0, npc.getEntityId());
-        final var watcher = new WrappedDataWatcher();
-        final var serializer = WrappedDataWatcher.Registry.get(Byte.class);
-        final var object = new WrappedDataWatcher.WrappedDataWatcherObject(17, serializer);
-        watcher.setObject(object, npc.getDisplayedSkinParts().getValue());
+        final List<EntityData<?>> data = new ArrayList<>();
+        data.add(new EntityData<>(16, EntityDataTypes.BYTE, npc.getDisplayedSkinParts().getValue()));
 
-        final List<WrappedDataValue> wrappedDataValueList = new ArrayList<>();
-        watcher.getWatchableObjects().forEach(wrappedDataValue -> {
-            final WrappedDataWatcher.WrappedDataWatcherObject obh = wrappedDataValue.getWatcherObject();
-            wrappedDataValueList.add(new WrappedDataValue(
-                    obh.getIndex(),
-                    obh.getSerializer(),
-                    wrappedDataValue.getRawValue()
-            ));
-        });
+        final WrapperPlayServerEntityMetadata packet = new WrapperPlayServerEntityMetadata(
+            npc.getEntityId(),
+            data
+        );
 
-        packet.getDataValueCollectionModifier().write(0, wrappedDataValueList);
-        protocolManager.sendServerPacket(player, packet);
+        protocolManager.getPlayerManager().sendPacket(player, packet);
     };
 
-    void send(@NotNull ProtocolManager protocolManager, @NotNull Player player, @NotNull Npc npc);
+    void send(@NotNull PacketEventsAPI<?> protocolManager, @NotNull Player player, @NotNull Npc npc);
 
 }

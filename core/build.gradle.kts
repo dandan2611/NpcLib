@@ -17,14 +17,14 @@ repositories {
     maven(url = "https://oss.sonatype.org/content/groups/public/") {
         name = "sonatype"
     }
-    maven(url = "https://repo.dmulloy2.net/repository/public/")
+    maven("https://repo.codemc.io/repository/maven-releases/")
 }
 
 dependencies {
     implementation(project(":api"))
     implementation("commons-io:commons-io:2.11.0")
     compileOnly("io.papermc.paper:paper-api:1.19.3-R0.1-SNAPSHOT")
-    compileOnly("com.comphenix.protocol:ProtocolLib:5.1.0")
+    compileOnly("com.github.retrooper:packetevents-spigot:2.11.1")
     testImplementation("org.junit.jupiter:junit-jupiter:5.9.2")
 }
 

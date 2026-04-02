@@ -1,7 +1,6 @@
 package fr.codinbox.npclib.core.listener;
 
 import fr.codinbox.npclib.api.npc.holder.NpcHolder;
-import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;

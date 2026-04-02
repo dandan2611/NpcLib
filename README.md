@@ -19,7 +19,7 @@ It is designed to be easy to use and to be able to be used in any Bukkit plugin.
 
 ## Installation
 
-1. Install latest version of [ProtocolLib](https://github.com/dmulloy2/ProtocolLib) on your server.
+1. Install latest version of [packetevents](https://github.com/retrooper/packetevents) on your server.
 2. Download the latest [release](https://github.com/dandan2611/NpcLib/releases/latest) and put it in your server `plugins` folder.
 3. Import the NpcLib API in your project using [Maven](https://maven.apache.org/) or [Gradle](https://gradle.org/).
 4. Put the `depends: [NpcLib]` in your plugin.yml.

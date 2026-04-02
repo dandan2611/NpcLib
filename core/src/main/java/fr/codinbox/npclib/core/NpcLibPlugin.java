@@ -2,10 +2,9 @@ package fr.codinbox.npclib.core;
 
 import fr.codinbox.npclib.api.NpcLib;
 import fr.codinbox.npclib.core.impl.NpcLibImpl;
-import org.bukkit.plugin.java.JavaPlugin;
-
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import org.bukkit.plugin.java.JavaPlugin;
 
 public class NpcLibPlugin extends JavaPlugin {
 

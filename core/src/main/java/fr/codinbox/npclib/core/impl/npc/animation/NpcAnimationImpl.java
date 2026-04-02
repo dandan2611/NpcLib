@@ -3,13 +3,12 @@ package fr.codinbox.npclib.core.impl.npc.animation;
 import fr.codinbox.npclib.api.npc.Npc;
 import fr.codinbox.npclib.api.npc.animation.AnimationType;
 import fr.codinbox.npclib.api.npc.animation.NpcAnimation;
-import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
-
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 public class NpcAnimationImpl implements NpcAnimation {
 

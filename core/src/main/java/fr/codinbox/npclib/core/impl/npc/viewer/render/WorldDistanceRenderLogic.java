@@ -12,7 +12,7 @@ public class WorldDistanceRenderLogic implements NpcRenderLogic {
     @Override
     public boolean shouldBeRendered(@NotNull Npc npc, @NotNull Player player, @Nullable NpcViewer viewer) {
         return player.getWorld().equals(npc.getWorld())
-                && player.getLocation().distance(npc.getLocation()) <= npc.getRenderDistance();
+            && player.getLocation().distance(npc.getLocation()) <= npc.getRenderDistance();
     }
 
 }

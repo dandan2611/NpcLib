@@ -17,13 +17,15 @@ import fr.codinbox.npclib.core.impl.npc.animation.NpcAnimationImpl;
 import fr.codinbox.npclib.core.impl.npc.equipment.NpcEquipmentImpl;
 import fr.codinbox.npclib.core.impl.npc.viewer.NpcViewerImpl;
 import fr.codinbox.npclib.core.impl.npc.viewer.render.WorldDistanceRenderLogic;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+import java.util.UUID;
 import org.bukkit.Location;
-import org.checkerframework.checker.units.qual.N;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
-
-import java.util.*;
 
 public class NpcImpl implements Npc {
 
@@ -44,9 +46,7 @@ public class NpcImpl implements Npc {
     private SkinPart skinPart;
     private boolean displayInTablist;
 
-    public NpcImpl(NpcHolder holder,
-                   int entityId,
-                   NpcConfig config) {
+    public NpcImpl(NpcHolder holder, int entityId, NpcConfig config) {
         this.holder = holder;
         this.renderLogic = new WorldDistanceRenderLogic();
         this.location = config.getLocation().clone();
@@ -161,8 +161,8 @@ public class NpcImpl implements Npc {
     public void playAnimation(@NotNull NpcAnimation animation) {
         var animationViewers = animation.getViewers();
 
-        animationViewers
-                .forEach(v -> Objects.requireNonNull(this.getViewer(v)).playAnimation(animation.getAnimationType()));
+        animationViewers.forEach(v -> Objects.requireNonNull(this.getViewer(v))
+                                             .playAnimation(animation.getAnimationType()));
     }
 
     @Override
