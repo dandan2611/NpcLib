@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "fr.codinbox.npclib"
-version = "2.8.1"
+version = "3.0.0"
 
 repositories {
 }
