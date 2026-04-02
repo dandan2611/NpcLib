@@ -3,7 +3,7 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 plugins {
     java
     `maven-publish`
-    id("com.github.johnrengelman.shadow") version "7.1.2"
+    id("com.gradleup.shadow") version "8.3.6"
 }
 
 group = "fr.codinbox.npclib"
@@ -23,6 +23,7 @@ repositories {
 dependencies {
     implementation(project(":api"))
     implementation("commons-io:commons-io:2.11.0")
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.17.0")
     compileOnly("io.papermc.paper:paper-api:1.19.3-R0.1-SNAPSHOT")
     compileOnly("com.github.retrooper:packetevents-spigot:2.11.1")
     testImplementation("org.junit.jupiter:junit-jupiter:5.9.2")
@@ -59,6 +60,7 @@ tasks {
     named<ShadowJar>("shadowJar") {
         archiveBaseName.set("npclib")
         mergeServiceFiles()
+        relocate("com.fasterxml.jackson", "fr.codinbox.npclib.libs.jackson")
     }
 }
 

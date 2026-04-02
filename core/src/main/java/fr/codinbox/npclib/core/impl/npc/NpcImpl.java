@@ -17,8 +17,8 @@ import fr.codinbox.npclib.core.impl.npc.animation.NpcAnimationImpl;
 import fr.codinbox.npclib.core.impl.npc.equipment.NpcEquipmentImpl;
 import fr.codinbox.npclib.core.impl.npc.viewer.NpcViewerImpl;
 import fr.codinbox.npclib.core.impl.npc.viewer.render.WorldDistanceRenderLogic;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
@@ -34,9 +34,9 @@ public class NpcImpl implements Npc {
     private final Skin skin;
     private int entityId;
     private UUID uuid;
-    private final HashMap<UUID, NpcViewer> viewers;
+    private final ConcurrentHashMap<UUID, NpcViewer> viewers;
     private final boolean global;
-    private final HashSet<NpcClickedListener> clickedListeners;
+    private final CopyOnWriteArraySet<NpcClickedListener> clickedListeners;
     private final int renderDistance;
     private final String name;
     private final NpcRenderLogic renderLogic;
@@ -54,8 +54,8 @@ public class NpcImpl implements Npc {
         this.entityId = entityId;
         this.uuid = config.getUuid();
         this.global = config.isGlobal();
-        this.viewers = new HashMap<>();
-        this.clickedListeners = new HashSet<>();
+        this.viewers = new ConcurrentHashMap<>();
+        this.clickedListeners = new CopyOnWriteArraySet<>();
         this.renderDistance = config.getRenderDistance();
         this.name = config.getName();
         this.equipment = new NpcEquipmentImpl(this);
@@ -107,7 +107,6 @@ public class NpcImpl implements Npc {
 
     @Override
     public void callClickedListeners(@NotNull NpcClickedEvent event) {
-        // TODO: This is not thread safe (ConcurrentModificationException)
         this.clickedListeners.forEach(listener -> listener.onNpcClicked(event));
     }
 

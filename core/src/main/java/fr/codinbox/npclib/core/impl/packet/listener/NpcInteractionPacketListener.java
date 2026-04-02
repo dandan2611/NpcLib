@@ -8,7 +8,7 @@ import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientIn
 import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientInteractEntity.InteractAction;
 import fr.codinbox.npclib.api.npc.event.NpcClickedEvent;
 import fr.codinbox.npclib.api.npc.holder.NpcHolder;
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.UUID;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -18,7 +18,7 @@ public class NpcInteractionPacketListener implements PacketListener {
 
     private final @NotNull NpcHolder holder;
 
-    private final @NotNull HashMap<UUID, Long> interactions = new HashMap<>();
+    private final @NotNull ConcurrentHashMap<UUID, Long> interactions = new ConcurrentHashMap<>();
 
     public NpcInteractionPacketListener(@NotNull Plugin plugin, @NotNull NpcHolder holder) {
         this.holder = holder;

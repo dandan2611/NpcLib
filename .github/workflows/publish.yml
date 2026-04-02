@@ -1,9 +1,8 @@
 name: Publish
 on:
-  workflow_dispatch:
-  release:
-    types:
-      - published
+  push:
+    tags:
+      - 'v*'
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -11,6 +10,8 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
@@ -27,17 +28,13 @@ jobs:
         env:
           MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
-      - name: Extract version
-        id: version
-        run: echo "version=$(grep '^version' build.gradle.kts | sed 's/.*"\(.*\)"/\1/')" >> "$GITHUB_OUTPUT"
       - name: Generate release notes
         id: notes
         run: |
-          TAG="v${{ steps.version.outputs.version }}"
-          PREV_TAG=$(git tag --sort=-creatordate | grep -v "$TAG" | head -1)
-          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          TAG="${GITHUB_REF_NAME}"
+          PREV_TAG=$(git tag --sort=-version:refname | grep -v "^${TAG}$" | head -1)
           if [ -n "$PREV_TAG" ]; then
-            LOG=$(git log "$PREV_TAG".."$TAG" --pretty=format:"- %s" 2>/dev/null || git log "$PREV_TAG"..HEAD --pretty=format:"- %s")
+            LOG=$(git log "$PREV_TAG".."$TAG" --pretty=format:"- %s")
           else
             LOG=$(git log --pretty=format:"- %s" -10)
           fi
@@ -49,19 +46,11 @@ jobs:
             echo "EOFNOTES"
           } >> "$GITHUB_OUTPUT"
       - name: Create GitHub Release
-        if: github.event_name == 'workflow_dispatch'
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ steps.notes.outputs.tag }}
-          name: ${{ steps.notes.outputs.tag }}
+          tag_name: ${{ github.ref_name }}
+          name: ${{ github.ref_name }}
           body: ${{ steps.notes.outputs.body }}
-          files: |
-            api/build/libs/api-*.jar
-            core/build/libs/npclib-*-all.jar
-      - name: Upload artifacts to existing release
-        if: github.event_name == 'release'
-        uses: softprops/action-gh-release@v2
-        with:
           files: |
             api/build/libs/api-*.jar
             core/build/libs/npclib-*-all.jar

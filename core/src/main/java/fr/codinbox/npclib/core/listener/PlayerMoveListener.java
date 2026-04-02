@@ -1,7 +1,7 @@
 package fr.codinbox.npclib.core.listener;
 
 import fr.codinbox.npclib.api.npc.holder.NpcHolder;
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.Objects;
 import java.util.UUID;
 import org.bukkit.Location;
@@ -14,7 +14,7 @@ public class PlayerMoveListener implements Listener {
 
     private final NpcHolder holder;
 
-    private final HashMap<UUID, Location> lastLocations = new HashMap<>();
+    private final ConcurrentHashMap<UUID, Location> lastLocations = new ConcurrentHashMap<>();
 
     public PlayerMoveListener(NpcHolder holder) {
         this.holder = holder;

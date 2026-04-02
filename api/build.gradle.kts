@@ -19,9 +19,16 @@ repositories {
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.19.3-R0.1-SNAPSHOT")
+    compileOnly("com.fasterxml.jackson.core:jackson-databind:2.17.0")
 }
 
+val targetJavaVersion = JavaVersion.VERSION_17
 java {
+    sourceCompatibility = targetJavaVersion
+    targetCompatibility = targetJavaVersion
+    if (JavaVersion.current() < targetJavaVersion) {
+        toolchain.languageVersion.set(JavaLanguageVersion.of(targetJavaVersion.majorVersion))
+    }
     withSourcesJar()
     withJavadocJar()
 }

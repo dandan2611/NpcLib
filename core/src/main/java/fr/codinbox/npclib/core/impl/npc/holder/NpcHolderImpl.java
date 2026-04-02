@@ -12,8 +12,9 @@ import fr.codinbox.npclib.core.impl.packet.listener.NpcInteractionPacketListener
 import fr.codinbox.npclib.core.listener.PlayerJoinListener;
 import fr.codinbox.npclib.core.listener.PlayerMoveListener;
 import fr.codinbox.npclib.core.listener.PlayerQuitListener;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -26,22 +27,25 @@ import org.jetbrains.annotations.NotNull;
 
 public class NpcHolderImpl implements NpcHolder {
 
+    private static final AtomicInteger NEXT_NPC_ID = new AtomicInteger(Integer.MAX_VALUE / 2);
+    private static final ConcurrentLinkedQueue<Integer> FREE_IDS = new ConcurrentLinkedQueue<>();
+
     @NotNull
     private final Plugin plugin;
 
     @NotNull
-    private final HashMap<Integer, Npc> npcs;
+    private final ConcurrentHashMap<Integer, Npc> npcs;
 
-    private final HashMap<World, Set<Npc>> worldNpcs;
+    private final ConcurrentHashMap<World, Set<Npc>> worldNpcs;
 
-    private final HashMap<UUID, Long> interactions = new HashMap<>();
+    private final ConcurrentHashMap<UUID, Long> interactions = new ConcurrentHashMap<>();
 
     private final NpcHolderImpl instance = this;
 
     public NpcHolderImpl(@NotNull Plugin plugin) {
         this.plugin = plugin;
-        this.npcs = new HashMap<>();
-        this.worldNpcs = new HashMap<>();
+        this.npcs = new ConcurrentHashMap<>();
+        this.worldNpcs = new ConcurrentHashMap<>();
 
         plugin.getServer().getPluginManager().registerEvents(new PlayerJoinListener(this), plugin);
         plugin.getServer().getPluginManager().registerEvents(new PlayerQuitListener(this), plugin);
@@ -60,11 +64,8 @@ public class NpcHolderImpl implements NpcHolder {
     }
 
     private int generateNpcId() {
-        int id = 100000; // TODO: Properly generate npc id
-        while (this.npcs.containsKey(id)) {
-            id++;
-        }
-        return id;
+        Integer recycled = FREE_IDS.poll();
+        return recycled != null ? recycled : NEXT_NPC_ID.getAndIncrement();
     }
 
     /**
@@ -96,7 +97,7 @@ public class NpcHolderImpl implements NpcHolder {
         int id = this.generateNpcId();
         var npc = new NpcImpl(this, id, config);
         this.npcs.put(npc.getEntityId(), npc);
-        this.worldNpcs.computeIfAbsent(npc.getWorld(), k -> new HashSet<>()).add(npc);
+        this.worldNpcs.computeIfAbsent(npc.getWorld(), k -> ConcurrentHashMap.newKeySet()).add(npc);
         // Update npc for players in the same world
         config.getLocation().getWorld().getPlayers().forEach(npc::renderFor);
         return npc;
@@ -105,8 +106,9 @@ public class NpcHolderImpl implements NpcHolder {
     @Override
     public void destroyNpc(@NotNull Npc npc) {
         this.npcs.remove(npc.getEntityId());
-        this.worldNpcs.computeIfAbsent(npc.getWorld(), k -> new HashSet<>()).remove(npc);
+        this.worldNpcs.computeIfAbsent(npc.getWorld(), k -> ConcurrentHashMap.newKeySet()).remove(npc);
         npc.getViewers().values().forEach(viewer -> viewer.setRendered(false));
+        FREE_IDS.offer(npc.getEntityId());
     }
 
     @Override
