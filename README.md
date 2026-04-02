@@ -57,7 +57,7 @@ class MyNpcSpawner {
     
     private final NpcHolder npcHolder;
     
-    public MyNpcManager(NpcHolder npcHolder) {
+    public MyNpcSpawner(NpcHolder npcHolder) {
         this.npcHolder = npcHolder;
     }
     
