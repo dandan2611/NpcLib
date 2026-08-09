@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "fr.codinbox.npclib"
-version = "3.0.0"
+version = "4.0.0"
 
 repositories {
     mavenCentral()
@@ -18,11 +18,11 @@ repositories {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.19.3-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:26.2.build.111-stable")
     compileOnly("com.fasterxml.jackson.core:jackson-databind:2.17.0")
 }
 
-val targetJavaVersion = JavaVersion.VERSION_17
+val targetJavaVersion = JavaVersion.VERSION_25
 java {
     sourceCompatibility = targetJavaVersion
     targetCompatibility = targetJavaVersion

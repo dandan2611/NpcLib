@@ -1,4 +1,4 @@
-image: gradle:7.4-jdk17-alpine
+image: gradle:9.7.0-jdk25-alpine
 
 stages:
   - build
@@ -12,7 +12,7 @@ before_script:
 build:
   stage: build
   script:
-    - gradle build -x test
+    - ./gradlew build -x test
   cache:
     key: $CI_COMMIT_REF_SLUG
     policy: pull
@@ -22,7 +22,7 @@ build:
 run-tests:
   stage: test
   script:
-    - gradle test
+    - ./gradlew test
   cache:
     key: $CI_COMMIT_REF_SLUG
     policy: pull
@@ -44,7 +44,7 @@ deploy:
   only:
     - master
   script:
-    - gradle build publish -x test -PnpclibAuthHeaderName=Job-Token -PnpclibAuthHeaderValue=${CI_JOB_TOKEN}
+    - ./gradlew build publish -x test -PnpclibAuthHeaderName=Job-Token -PnpclibAuthHeaderValue=${CI_JOB_TOKEN}
   cache:
     key: $CI_COMMIT_REF_SLUG
     policy: pull

@@ -6,6 +6,7 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * Represents the equipment of an NPC.
+ * Mutating methods immediately send updates and must be called from the server thread.
  */
 public interface NpcEquipment {
 

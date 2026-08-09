@@ -2,6 +2,6 @@ name: NpcLib
 author: dandan2611
 version: '${version}'
 main: fr.codinbox.npclib.core.NpcLibPlugin
-api-version: 1.19
+api-version: '26.2'
 depend:
   - packetevents

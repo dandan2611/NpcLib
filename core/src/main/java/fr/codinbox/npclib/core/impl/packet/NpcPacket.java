@@ -38,7 +38,7 @@ public interface NpcPacket {
 
         final WrapperPlayServerPlayerInfoUpdate packet = new WrapperPlayServerPlayerInfoUpdate(
             EnumSet.of(Action.ADD_PLAYER, Action.UPDATE_LISTED), List.of(new PlayerInfo(
-            new UserProfile(npc.getUUID(), npc.getName(), properties),
+            new UserProfile(npc.getUUID(), profileName(npc), properties),
             false,
             0,
             GameMode.CREATIVE,
@@ -113,5 +113,11 @@ public interface NpcPacket {
     };
 
     void send(@NotNull PacketEventsAPI<?> protocolManager, @NotNull Player player, @NotNull Npc npc);
+
+    static @NotNull String profileName(@NotNull Npc npc) {
+        return npc.isNameVisible()
+                ? npc.getName()
+                : "npc" + Integer.toUnsignedString(npc.getEntityId(), 16);
+    }
 
 }

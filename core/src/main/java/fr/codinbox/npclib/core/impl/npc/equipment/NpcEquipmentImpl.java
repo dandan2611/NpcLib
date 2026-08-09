@@ -89,20 +89,14 @@ public class NpcEquipmentImpl implements NpcEquipment {
 
     @Override
     public void setMainHand(@Nullable ItemStack mainHand) {
-        if (mainHand == null) {
-            this.mainHand = null;
-            return;
-        }
-        this.mainHand = mainHand.clone();
+        this.mainHand = mainHand == null ? null : mainHand.clone();
+        this.npc.updateEquipment();
     }
 
     @Override
     public void setOffHand(@Nullable ItemStack offHand) {
-        if (offHand == null) {
-            this.offHand = null;
-            return;
-        }
-        this.offHand = offHand.clone();
+        this.offHand = offHand == null ? null : offHand.clone();
+        this.npc.updateEquipment();
     }
 
     @Override
@@ -110,11 +104,15 @@ public class NpcEquipmentImpl implements NpcEquipment {
         if (contents.length != 4) {
             throw new IllegalArgumentException("The contents array must have a length of 4");
         }
-        this.helmet = contents[0];
-        this.chestplate = contents[1];
-        this.leggings = contents[2];
-        this.boots = contents[3];
+        this.helmet = clone(contents[0]);
+        this.chestplate = clone(contents[1]);
+        this.leggings = clone(contents[2]);
+        this.boots = clone(contents[3]);
         this.npc.updateEquipment();
+    }
+
+    private static @Nullable ItemStack clone(@Nullable ItemStack item) {
+        return item == null ? null : item.clone();
     }
 
 }

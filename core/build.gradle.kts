@@ -1,13 +1,14 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import org.gradle.api.file.DuplicatesStrategy
 
 plugins {
     java
     `maven-publish`
-    id("com.gradleup.shadow") version "8.3.6"
+    id("com.gradleup.shadow") version "9.6.1"
 }
 
 group = "fr.codinbox.npclib"
-version = "3.0.0"
+version = "4.0.0"
 
 repositories {
     mavenCentral()
@@ -24,12 +25,15 @@ dependencies {
     implementation(project(":api"))
     implementation("commons-io:commons-io:2.11.0")
     implementation("com.fasterxml.jackson.core:jackson-databind:2.17.0")
-    compileOnly("io.papermc.paper:paper-api:1.19.3-R0.1-SNAPSHOT")
-    compileOnly("com.github.retrooper:packetevents-spigot:2.11.1")
+    compileOnly("io.papermc.paper:paper-api:26.2.build.111-stable")
+    compileOnly("com.github.retrooper:packetevents-spigot:2.13.0")
     testImplementation("org.junit.jupiter:junit-jupiter:5.9.2")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.9.2")
+    testImplementation("io.papermc.paper:paper-api:26.2.build.111-stable")
+    testImplementation("com.github.retrooper:packetevents-spigot:2.13.0")
 }
 
-val targetJavaVersion = JavaVersion.VERSION_17
+val targetJavaVersion = JavaVersion.VERSION_25
 java {
     sourceCompatibility = targetJavaVersion
     targetCompatibility = targetJavaVersion
@@ -43,6 +47,7 @@ tasks.withType(JavaCompile::class).configureEach {
         options.release.set(targetJavaVersion.majorVersion.toInt()) // The string represent a number, like "1" for Java1
     }
     options.encoding = Charsets.UTF_8.name()
+    options.compilerArgs.add("-Xlint:deprecation")
 }
 
 tasks.processResources.configure {
@@ -59,6 +64,9 @@ tasks.processResources.configure {
 tasks {
     named<ShadowJar>("shadowJar") {
         archiveBaseName.set("npclib")
+        filesMatching("META-INF/services/**") {
+            duplicatesStrategy = DuplicatesStrategy.INCLUDE
+        }
         mergeServiceFiles()
         relocate("com.fasterxml.jackson", "fr.codinbox.npclib.libs.jackson")
     }

@@ -1,7 +1,7 @@
 name: Minecaft-Plugin-Base
 version: '${version}'
 main: fr.codinbox.base.BaseMain
-api-version: 1.19
+api-version: '26.2'
 authors: [ dandan2611 ]
 load: POSTWORLD
 depend: []

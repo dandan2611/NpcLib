@@ -1,6 +1,6 @@
 # NpcLib
 
-![](https://img.shields.io/badge/Supported%20versions-1.19.3%2B-9cf)
+![](https://img.shields.io/badge/Supported%20version-26.2-9cf)
 ![Build](https://github.com/dandan2611/npclib/actions/workflows/build.yml/badge.svg)
 
 NpcLib is a library for creating NPCs in Minecraft. 
@@ -10,19 +10,17 @@ It is designed to be easy to use and to be able to be used in any Bukkit plugin.
 
 | Feature      | Description                                                                                                |
 |--------------|------------------------------------------------------------------------------------------------------------|
-| NPCs         | 🏗️ Create/Delete NPCs with a name, skin and position                                                      |
-| Interactions | 🎧 Listen to click events on NPCs                                                                          |
-
-### What's coming next?
-
-- [ ] Add support for animations
+| NPCs         | Create/Delete NPCs with a skin, equipment and position                                                     |
+| Names        | Viewer-specific Adventure names with colors, multiple lines and TextDisplay animations                    |
+| Interactions | Listen to click events on NPCs                                                                             |
 
 ## Installation
 
-1. Install latest version of [packetevents](https://github.com/retrooper/packetevents) on your server.
-2. Download the latest [release](https://github.com/dandan2611/NpcLib/releases/latest) and put it in your server `plugins` folder.
-3. Import the NpcLib API in your project using [Maven](https://maven.apache.org/) or [Gradle](https://gradle.org/).
-4. Put the `depends: [NpcLib]` in your plugin.yml.
+1. Run Paper 26.2 with Java 25 or newer.
+2. Install PacketEvents 2.13.0 or newer on your server.
+3. Download the latest [release](https://github.com/dandan2611/NpcLib/releases/latest) and put it in your server `plugins` folder.
+4. Import the NpcLib API in your project using [Maven](https://maven.apache.org/) or [Gradle](https://gradle.org/).
+5. Put the `depends: [NpcLib]` in your plugin.yml.
 
 ### Example of importing the API with Gradle (Kotlin)
 
@@ -32,7 +30,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly("fr.codinbox.npclib:api:3.0.0")
+    compileOnly("fr.codinbox.npclib:api:4.0.0")
 }
 ```
 
@@ -80,3 +78,25 @@ class MyNpcSpawner {
 ````
 
 After creating the NPC, the holder will automatically manage the lifecycle of the NPC :)
+
+### Custom names
+
+Custom names are virtual TextDisplays. The provider is evaluated independently for each viewer, and Adventure components support colors and multiple lines.
+
+```java
+Npc npc = npcHolder.createNpc(
+        NpcConfig.create(location, skin)
+                .setCustomName(player -> NpcName.builder()
+                        .frame(Component.text("Hello " + player.getName(), NamedTextColor.GOLD), 20)
+                        .frame(Component.text("Shop", NamedTextColor.AQUA)
+                                .append(Component.newline())
+                                .append(Component.text("Right click", NamedTextColor.GRAY)), 20)
+                        .interpolationDuration(5)
+                        .offset(0, 2.25, 0)
+                        .build())
+);
+```
+
+`setCustomName` hides the vanilla player nameplate by default. Use `setNameVisible(false)` without a custom name to only hide it. Call `npc.updateCustomName()` after viewer-specific data changes to evaluate the provider again.
+
+Each frame can also receive a Bukkit `Transformation` and an opacity through the four-argument `frame` overload. Transformations and opacity are interpolated over the configured duration.

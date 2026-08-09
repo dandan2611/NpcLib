@@ -73,6 +73,9 @@ public class NpcHolderImpl implements NpcHolder {
      */
     private void updateNpcs() {
         this.npcs.values().forEach(npc -> {
+            if (npc.hasCustomName()) {
+                npc.getViewers().values().forEach(NpcViewer::tickCustomName);
+            }
             if (npc.isLookingAtPlayer()) {
                 final var viewers = npc.getViewers().values().stream().filter(NpcViewer::isRendered);
                 viewers.forEach(viewer -> {
@@ -95,7 +98,8 @@ public class NpcHolderImpl implements NpcHolder {
     @Override
     public @NotNull Npc createNpc(@NotNull NpcConfig config) {
         int id = this.generateNpcId();
-        var npc = new NpcImpl(this, id, config);
+        int nameId = this.generateNpcId();
+        var npc = new NpcImpl(this, id, nameId, config);
         this.npcs.put(npc.getEntityId(), npc);
         this.worldNpcs.computeIfAbsent(npc.getWorld(), k -> ConcurrentHashMap.newKeySet()).add(npc);
         // Update npc for players in the same world
@@ -105,10 +109,15 @@ public class NpcHolderImpl implements NpcHolder {
 
     @Override
     public void destroyNpc(@NotNull Npc npc) {
-        this.npcs.remove(npc.getEntityId());
+        if (!this.npcs.remove(npc.getEntityId(), npc)) {
+            return;
+        }
         this.worldNpcs.computeIfAbsent(npc.getWorld(), k -> ConcurrentHashMap.newKeySet()).remove(npc);
         npc.getViewers().values().forEach(viewer -> viewer.setRendered(false));
         FREE_IDS.offer(npc.getEntityId());
+        if (npc instanceof NpcImpl npcImpl) {
+            FREE_IDS.offer(npcImpl.getNameEntityId());
+        }
     }
 
     @Override

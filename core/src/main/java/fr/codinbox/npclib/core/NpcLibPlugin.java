@@ -3,6 +3,7 @@ package fr.codinbox.npclib.core;
 import fr.codinbox.npclib.api.NpcLib;
 import fr.codinbox.npclib.core.impl.NpcLibImpl;
 import java.util.UUID;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -25,7 +26,10 @@ public class NpcLibPlugin extends JavaPlugin {
 
     @Override
     public void onDisable() {
-
+        if (this.npcLib != null) {
+            this.npcLib.getHolders().forEach(holder -> Set.copyOf(holder.getNpcs()).forEach(holder::destroyNpc));
+        }
+        INSTANCE = null;
     }
 
     public static NpcLibPlugin instance() {

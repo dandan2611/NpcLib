@@ -79,4 +79,14 @@ public interface NpcViewer {
      */
     void updateEquipment(@NotNull NpcEquipment equipment);
 
+    /**
+     * Re-evaluate the viewer-specific custom name.
+     */
+    void updateCustomName();
+
+    /**
+     * Advance the viewer-specific custom name animation by one server tick.
+     */
+    void tickCustomName();
+
 }

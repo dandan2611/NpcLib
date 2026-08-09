@@ -3,11 +3,14 @@ package fr.codinbox.npclib.api.npc;
 import com.destroystokyo.paper.SkinParts;
 import fr.codinbox.npclib.api.npc.skin.Skin;
 import fr.codinbox.npclib.api.npc.skin.SkinPart;
+import fr.codinbox.npclib.api.npc.name.NpcName;
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
+import java.util.function.Function;
 
 /**
  * Represents a NPC configuration.
@@ -43,6 +46,16 @@ public final class NpcConfig {
      * The NPC name (nameplate).
      */
     private String name = "";
+
+    /**
+     * Whether the vanilla player nameplate is visible.
+     */
+    private boolean nameVisible = true;
+
+    /**
+     * Creates the custom name independently for each viewer.
+     */
+    private @Nullable Function<Player, NpcName> customNameProvider;
 
     /**
      * Whether the NPC should look at the player or not.
@@ -141,6 +154,30 @@ public final class NpcConfig {
     }
 
     /**
+     * Set whether the vanilla player nameplate is visible.
+     *
+     * @param nameVisible whether the vanilla nameplate is visible
+     * @return the NPC configuration
+     */
+    public @NotNull NpcConfig setNameVisible(boolean nameVisible) {
+        this.nameVisible = nameVisible;
+        return this;
+    }
+
+    /**
+     * Set the custom name provider. The provider is evaluated for each viewer.
+     * Returning {@code null} hides the custom name for that viewer.
+     *
+     * @param customNameProvider the custom name provider
+     * @return the NPC configuration
+     */
+    public @NotNull NpcConfig setCustomName(@NotNull Function<Player, @Nullable NpcName> customNameProvider) {
+        this.customNameProvider = customNameProvider;
+        this.nameVisible = false;
+        return this;
+    }
+
+    /**
      * Set whether the NPC should look at the player or not.
      *
      * @param lookAtPlayer whether the NPC should look at the player or not
@@ -227,6 +264,24 @@ public final class NpcConfig {
      */
     public @NotNull String getName() {
         return name;
+    }
+
+    /**
+     * Get whether the vanilla player nameplate is visible.
+     *
+     * @return whether the vanilla player nameplate is visible
+     */
+    public boolean isNameVisible() {
+        return this.nameVisible;
+    }
+
+    /**
+     * Get the custom name provider.
+     *
+     * @return the viewer-specific custom name provider, or {@code null}
+     */
+    public @Nullable Function<Player, NpcName> getCustomNameProvider() {
+        return this.customNameProvider;
     }
 
     /**

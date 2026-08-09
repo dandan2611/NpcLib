@@ -7,6 +7,7 @@ import fr.codinbox.npclib.api.npc.equipment.NpcEquipment;
 import fr.codinbox.npclib.api.npc.event.NpcClickedEvent;
 import fr.codinbox.npclib.api.npc.event.NpcClickedListener;
 import fr.codinbox.npclib.api.npc.holder.NpcHolder;
+import fr.codinbox.npclib.api.npc.name.NpcName;
 import fr.codinbox.npclib.api.npc.skin.Skin;
 import fr.codinbox.npclib.api.npc.skin.SkinPart;
 import fr.codinbox.npclib.api.npc.viewer.NpcRenderLogic;
@@ -126,6 +127,36 @@ public interface Npc {
     @NotNull String getName();
 
     /**
+     * Check whether the vanilla player nameplate is visible.
+     *
+     * @return whether the vanilla nameplate is visible
+     */
+    boolean isNameVisible();
+
+    /**
+     * Resolve the custom name for a viewer.
+     *
+     * @param player the viewer
+     * @return the custom name, or {@code null} when none should be displayed
+     */
+    @Nullable NpcName getCustomName(@NotNull Player player);
+
+    /**
+     * Check whether this NPC has a custom name provider.
+     *
+     * @return whether custom names are configured
+     */
+    boolean hasCustomName();
+
+    /**
+     * Re-evaluate and update the custom name for every viewer.
+     * This method must be called from the server thread.
+     */
+    default void updateCustomName() {
+        this.getViewers().values().forEach(NpcViewer::updateCustomName);
+    }
+
+    /**
      * Get if the NPC is rendered (visible) for a player.
      *
      * @param uuid the player UUID
@@ -229,6 +260,7 @@ public interface Npc {
      * Add a viewer to the NPC.
      *
      * @param uuid the viewer UUID
+     * @return the created viewer
      */
     @NotNull NpcViewer addViewer(@NotNull UUID uuid);
 
